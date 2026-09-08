@@ -1,0 +1,41 @@
+﻿@model ShopTARpe25.Models.Spaceship.SpaceshipCreateViewModel
+@{
+    ViewData["Title"] = "Create Spaceship";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Classification" class="control-label"></label>
+        <input asp-for="Classification" class="form-control" />
+        <span asp-validation-for="Classification" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BuiltDate" class="control-label"></label>
+        <input asp-for="BuiltDate" class="form-control" />
+        <span asp-validation-for="Classification" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Crew" class="control-label"></label>
+        <input asp-for="Crew" class="form-control" />
+        <span asp-validation-for="Crew" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EnginePower" class="control-label"></label>
+        <input asp-for="EnginePower" class="form-control" />
+        <span asp-validation-for="EnginePower" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-success" />
+        <a asp-action="Index" asp-controller="Spaceship" type="submit" class="btn btn-success">Back</a>
+
+    </div>
+</form>
+
+
