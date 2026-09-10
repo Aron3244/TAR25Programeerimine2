@@ -1,3 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ShopTARpe25.ApplicationServices.Services;
+using ShopTARpe25.Core.ServiceInterface;
+using ShopTARpe25.Data;
+
 namespace ShopTARpe25
 {
     public class Program
@@ -5,6 +11,11 @@ namespace ShopTARpe25
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<ShopTARpe25Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefualtConnection")));
+
+            builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
