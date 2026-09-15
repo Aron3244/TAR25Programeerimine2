@@ -1,5 +1,70 @@
-﻿
-<div>
-    <a asp-action="create" asp-controller="Spaceship" type ="submit" class="btn btn-primary">Create</a>
-</div>
+﻿@model IEnumerable<ShopTARpe25.Models.Spaceship.SpaceshipIndexViewModel>
 
+<input type="submit" value="Create" class="btn btn-success" />
+@{
+    ViewData["Title"] = "Spaceship index";
+}
+
+<h2>Spaceship Index</h2>
+
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Classification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BuiltDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Crew)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnginePower)
+            </th>
+            <th>Tegevused</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Classification)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BuiltDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Crew)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnginePower)
+                </td>
+                <td>
+                    <input type="submit" value="Edit" class="btn btn-success" /> 
+                    <input type="submit" value="details" class="btn btn-success" /> 
+                    <input type="submit" value="Delite" class="btn btn-success" />
+                </td>
+                
+
+            </tr>
+        }
+    </tbody>
+</table>
