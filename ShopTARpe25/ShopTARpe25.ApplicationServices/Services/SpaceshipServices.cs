@@ -44,5 +44,15 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             return domain;
         }
+        //siia teha meetod nimega DteailsAsync
+        //see ainult pärib andmeid contectist
+
+        public async Task<Spaceship> DteailsAsync(Guid id)
+        {
+            var result = await _context.Spaceships
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return result;
+        }
     }
 }

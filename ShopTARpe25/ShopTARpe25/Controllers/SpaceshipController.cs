@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
@@ -76,6 +77,38 @@ namespace ShopTARpe25.Controllers
             var result = await _spaceshipService.Create(dto);
 
             return RedirectToAction(nameof(Index));
+        }
+        //tuleb teha Details meetod
+        //se kutsub välja inerfacest serice meetodi
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid Id)
+        {
+            var spaceship = await _spaceshipService.DteailsAsync(Id);
+
+            //veakäsklus
+            //suunab notfound vaatele kui andmeid poile 
+            if(spaceship == null)
+            {
+                return NotFound();
+            }
+
+
+
+            var vm = new SpaceshipDetailsViewModel();
+            
+                vm.Id = spaceship.Id;
+                vm.Name = spaceship.Name;
+                vm.Classification = spaceship.Classification;
+                vm.BuiltDate = spaceship.BuiltDate;
+                vm.Crew = spaceship.Crew;
+                vm.EnginePower = spaceship.Crew;
+                vm.CreatedAt = spaceship.CreatedAt;
+                vm.ModifiedAt = spaceship.ModifiedAt;
+
+
+
+            
+            return View();
         }
     }
 }
