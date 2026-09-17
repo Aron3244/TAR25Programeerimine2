@@ -44,7 +44,7 @@ namespace ShopTARpe25.Controllers
                    
             });
 
-            return View(result);
+            return View(result.ToList());
         }
 
         //kui kasutaja klikib "Create" nuppu, siis see meetod käivitatakse
