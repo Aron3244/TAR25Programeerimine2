@@ -84,7 +84,7 @@ namespace ShopTARpe25.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid Id)
         {
-            var spaceship = await _spaceshipService.DteailsAsync(Id);
+            var spaceship = await _spaceshipService.DetailsAsync(Id);
 
             //veakäsklus
             //suunab notfound vaatele kui andmeid poile 
@@ -114,7 +114,7 @@ namespace ShopTARpe25.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
-            var spaceship = await _spaceshipService.DteailsAsync(id);
+            var spaceship = await _spaceshipService.DetailsAsync(id);
 
                 if (spaceship == null)
             {

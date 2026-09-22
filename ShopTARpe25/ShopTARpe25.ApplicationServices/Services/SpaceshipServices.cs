@@ -20,6 +20,7 @@ namespace ShopTARpe25.ApplicationServices.Services
         {
             _context = context;
         }
+
         public async Task<Spaceship> Create(SpaceshipDto dto)
         {
             Spaceship domain = new();
@@ -44,17 +45,18 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             return domain;
         }
-        //siia teha meetod nimega DteailsAsync
-        //see ainult pärib andmeid contectist
 
-        public async Task<Spaceship> DteailsAsync(Guid id)
+        //siia teha meetod nimega DetailsAsync
+        //see ainult p'rib andmed contextist
+        public async Task<Spaceship> DetailsAsync(Guid id)
         {
             var result = await _context.Spaceships
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return result;
         }
-        public async Task<Spaceship> Update(Spaceship dto)
+
+        public async Task<Spaceship> Update(SpaceshipDto dto)
         {
             Spaceship spaceship = new();
 
@@ -68,7 +70,7 @@ namespace ShopTARpe25.ApplicationServices.Services
             spaceship.ModifiedAt = DateTime.Now;
 
             _context.Spaceships.Update(spaceship);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return spaceship;
         }
