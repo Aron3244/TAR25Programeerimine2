@@ -12,3 +12,4 @@ namespace ShopTARpe25.Core.ServiceInterface
         Task<Spaceship> Update(SpaceshipDto dto);
     }
 }
+//
