@@ -157,22 +157,6 @@ namespace ShopTARpe25.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-
-            var result = await _spaceshipService.Delete(id);
-    
-
-            if (result == null)
-            {
-                RedirectToAction(nameof(Index));
-            }
-
-
-
-            return RedirectToAction(nameof(Index));
-        }
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -183,7 +167,6 @@ namespace ShopTARpe25.Controllers
                 return NotFound();
             }
 
-
             var vm = new SpaceshipDeleteViewModel();
 
             vm.Id = spaceship.Id;
@@ -191,11 +174,24 @@ namespace ShopTARpe25.Controllers
             vm.Classification = spaceship.Classification;
             vm.BuiltDate = spaceship.BuiltDate;
             vm.Crew = spaceship.Crew;
-            vm.EnginePower = spaceship.Crew;
+            vm.EnginePower = spaceship.EnginePower;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
 
             return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmation(Guid id)
+        {
+            var result = await _spaceshipService.Delete(id);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
