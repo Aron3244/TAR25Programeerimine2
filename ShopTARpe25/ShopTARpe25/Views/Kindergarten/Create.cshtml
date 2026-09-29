@@ -1,0 +1,34 @@
+﻿@model DatabaseTask.Core.Domain.Kindergarten
+
+@{
+    ViewData["Title"] = "Lisa uus";
+}
+
+<h1>Lisa uus rühm</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div class="form-group mb-3">
+                <label asp-for="GroupName" class="control-label">Rühma nimi</label>
+                <input asp-for="GroupName" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ChildrenCount" class="control-label">Laste arv</label>
+                <input asp-for="ChildrenCount" type="number" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="KindergartenName" class="control-label">Lasteaia nimi</label>
+                <input asp-for="KindergartenName" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="TeacherName" class="control-label">Õpetaja nimi</label>
+                <input asp-for="TeacherName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvesta" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Tagasi</a>
+            </div>
+        </form>
+    </div>
+</div>

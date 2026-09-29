@@ -1,0 +1,29 @@
+﻿@model DatabaseTask.Core.Domain.Kindergarten
+
+@{
+    ViewData["Title"] = "Kustuta";
+}
+
+<h1>Kustutamine</h1>
+<h3>Kas oled kindel, et soovid selle kirje kustutada?</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Rühma nimi</dt>
+        <dd class="col-sm-9">@Model.GroupName</dd>
+
+        <dt class="col-sm-3">Lasteaia nimi</dt>
+        <dd class="col-sm-9">@Model.KindergartenName</dd>
+
+        <dt class="col-sm-3">Õpetaja nimi</dt>
+        <dd class="col-sm-9">@Model.TeacherName</dd>
+    </dl>
+    
+  <form asp-controller="Kindergarten" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Kustuta" class="btn btn-danger" />
+    <a asp-action="Index" class="btn btn-secondary">Loobu</a>
+</form>
+</div>

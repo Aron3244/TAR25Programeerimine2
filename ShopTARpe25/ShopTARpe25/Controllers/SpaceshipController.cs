@@ -158,18 +158,9 @@ namespace ShopTARpe25.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(SpaceshipDeleteViewModel vm) // Võtab vastu objekti, mitte ainult Guid id
         {
-
-            var result = await _spaceshipService.Delete(id);
-    
-
-            if (result == null)
-            {
-                RedirectToAction(nameof(Index));
-            }
-
-
+            var result = await _spaceshipService.Delete(vm.Id);
 
             return RedirectToAction(nameof(Index));
         }

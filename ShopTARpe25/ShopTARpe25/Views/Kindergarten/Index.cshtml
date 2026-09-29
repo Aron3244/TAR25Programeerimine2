@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DatabaseTask.Core.Domain.Kindergarten>
+
+@{
+    ViewData["Title"] = "Lasteaiad";
+}
+
+<h1>Lasteaiad</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Lisa uus rühm</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rühma nimi</th>
+            <th>Laste arv</th>
+            <th>Lasteaia nimi</th>
+            <th>Õpetaja nimi</th>
+            <th>Loodud</th>
+            <th>Muudetud</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.GroupName</td>
+            <td>@item.ChildrenCount</td>
+            <td>@item.KindergartenName</td>
+            <td>@item.TeacherName</td>
+            <td>@item.CreatedAt.ToLocalTime().ToString("g")</td>
+            <td>@item.UpdatedAt.ToLocalTime().ToString("g")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Muuda</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detailid</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Kustuta</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

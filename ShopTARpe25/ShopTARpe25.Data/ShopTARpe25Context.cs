@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DatabaseTask.Core.Domain;
+using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Domain;
 
 
@@ -13,5 +14,6 @@ namespace ShopTARpe25.Data
         }
 
         public DbSet<Spaceship> Spaceships { get; set; }
+        
     }
 }
