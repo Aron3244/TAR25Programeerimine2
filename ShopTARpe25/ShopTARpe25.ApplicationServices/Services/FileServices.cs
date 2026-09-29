@@ -53,9 +53,19 @@ namespace ShopTARpe25.ApplicationServices.Services
                     {
                         file.CopyTo(fileStream);
                         //domaini thea FileToApi
-                        FileToApi
-                    }
+                        FileToApi path = new FileToApi
+                        {
+                            //tuleb ära MAPPIDA
+                            //domain ja ?
 
+                            
+                            Id = Guid.NewGuid(),
+                            ExistingFilePath = uniqueFileName,
+                            SpaceshipId = domain.Id
+                           
+                        };
+                        _context.FileToApis.AddAsync(path);
+                    }
                 }
             }
         }
