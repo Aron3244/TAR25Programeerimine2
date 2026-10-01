@@ -67,7 +67,12 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="spaceship" class="btn btn-warning">Back to List</a>
-    <a asp-action="Delete" asp-controller="Spaceship" type="submit" class="btn btn-danger">Delete</a>
+    <form asp-action="DeleteConfirmation" asp-controller="Spaceship" method="post" style="display:inline;">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    
+    <a asp-action="Index" asp-controller="Spaceship" class="btn btn-warning">Back to List</a>
 </div>
+
 
