@@ -5,6 +5,7 @@ using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 
 
+
 namespace ShopTARpe25.ApplicationServices.Services
 {
 
@@ -12,14 +13,19 @@ namespace ShopTARpe25.ApplicationServices.Services
     public class SpaceshipServices : ISpaceshipServices
     {
         private readonly ShopTARpe25Context _context;
+        private readonly IFileServices _fileServices;
 
         public SpaceshipServices
             (
-                ShopTARpe25Context context
+                ShopTARpe25Context context,
+                IFileServices fileServices
             )
         {
             _context = context;
+            _fileServices = fileServices;
         }
+
+        
 
         public async Task<Spaceship> Create(SpaceshipDto dto)
         {
@@ -33,6 +39,9 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.EnginePower = dto.EnginePower;
             domain.CreatedAt = DateTime.Now;
             domain.ModifiedAt = DateTime.Now;
+            //peame saama file teenustets välja kutsuda meetod,
+            //mis salvestab faili serverisse
+            _fileServices.FilesToAPI(dto, domain);
 
             //siia tuleb kood, mis salvestab domain
             //objekti andmebaasi
@@ -68,6 +77,7 @@ namespace ShopTARpe25.ApplicationServices.Services
             spaceship.EnginePower = dto.EnginePower;
             spaceship.CreatedAt = dto.CreatedAt;
             spaceship.ModifiedAt = DateTime.Now;
+           
 
             _context.Spaceships.Update(spaceship);
             await _context.SaveChangesAsync();
