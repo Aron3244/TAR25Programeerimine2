@@ -1,37 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DatabaseTask.Data;
-using DatabaseTask.Core.Domain;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ShopTARpe25.Core.Dto;
+using ShopTARpe25.Core.ServiceInterface;
 
-
-namespace DatabaseTask.Controllers
+namespace ShopTARpe25.Controllers
 {
     public class KindergartenController : Controller
     {
-        private readonly DatabaseTaskDbContext _context;
+        private readonly IKindergartenServices _kindergartenServices;
 
-        public KindergartenController(DatabaseTaskDbContext context)
+        public KindergartenController(IKindergartenServices kindergartenServices)
         {
-            _context = context;
+            _kindergartenServices = kindergartenServices;
         }
 
-      
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var list = await _context.Kindergartens.ToListAsync();
-            return View(list);
+            var result = await _kindergartenServices.GetAllAsync();
+            return View(result);
         }
 
-
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var kindergarten = await _context.Kindergartens
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var kindergarten = await _kindergartenServices.DetailsAsync(id);
 
             if (kindergarten == null)
             {
@@ -41,91 +35,71 @@ namespace DatabaseTask.Controllers
             return View(kindergarten);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-    
         [HttpPost]
-        public async Task<IActionResult> Create(Kindergarten kindergarten)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(KindergartenDto dto)
         {
             if (ModelState.IsValid)
             {
-                kindergarten.CreatedAt = DateTime.UtcNow;
-                kindergarten.UpdatedAt = DateTime.UtcNow;
-
-                _context.Add(kindergarten);
-                await _context.SaveChangesAsync();
+                await _kindergartenServices.Create(dto);
                 return RedirectToAction(nameof(Index));
             }
-            return View(kindergarten);
+
+            return View(dto);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var kindergarten = await _kindergartenServices.DetailsAsync(id);
 
-            var kindergarten = await _context.Kindergartens.FindAsync(id);
             if (kindergarten == null)
             {
                 return NotFound();
             }
-            return View(kindergarten);
+
+            var dto = new KindergartenDto
+            {
+                Id = kindergarten.Id,
+                GroupName = kindergarten.GroupName,
+                ChildrenCount = kindergarten.ChildrenCount,
+                KindergartenName = kindergarten.KindergartenName,
+                TeacherName = kindergarten.TeacherName,
+                CreatedAt = kindergarten.CreatedAt,
+                UpdatedAt = kindergarten.UpdatedAt
+            };
+
+            return View(dto);
         }
 
-   
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Kindergarten kindergarten)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, KindergartenDto dto)
         {
-            if (id != kindergarten.Id)
+            if (id != dto.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var existing = await _context.Kindergartens.FindAsync(id);
-                    if (existing == null)
-                    {
-                        return NotFound();
-                    }
-
-                    existing.GroupName = kindergarten.GroupName;
-                    existing.ChildrenCount = kindergarten.ChildrenCount;
-                    existing.KindergartenName = kindergarten.KindergartenName;
-                    existing.TeacherName = kindergarten.TeacherName;
-                    existing.UpdatedAt = DateTime.UtcNow;
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _context.Kindergartens.AnyAsync(e => e.Id == id))
-                    {
-                        return NotFound();
-                    }
-                    throw;
-                }
+                await _kindergartenServices.Update(dto);
                 return RedirectToAction(nameof(Index));
             }
-            return View(kindergarten);
+
+            return View(dto);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var kindergarten = await _context.Kindergartens
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var kindergarten = await _kindergartenServices.DetailsAsync(id);
 
             if (kindergarten == null)
             {
@@ -136,15 +110,10 @@ namespace DatabaseTask.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var kindergarten = await _context.Kindergartens.FindAsync(id);
-            if (kindergarten != null)
-            {
-                _context.Kindergartens.Remove(kindergarten);
-                await _context.SaveChangesAsync();
-            }
-
+            await _kindergartenServices.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

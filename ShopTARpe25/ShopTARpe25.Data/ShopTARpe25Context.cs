@@ -1,4 +1,4 @@
-﻿using DatabaseTask.Core.Domain;
+﻿
 using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Domain;
 
@@ -13,7 +13,7 @@ namespace ShopTARpe25.Data
         {
         }
 
+        public DbSet<Kindergarten> Kindergartens { get; set; }
         public DbSet<Spaceship> Spaceships { get; set; }
-        
     }
 }
