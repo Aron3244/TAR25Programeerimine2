@@ -4,8 +4,8 @@ using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using System.Net;
-
+using System;
+using System.IO;
 
 namespace ShopTARpe25.ApplicationServices.Services
 {
@@ -16,57 +16,46 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public FileServices
           (
-             
              ShopTARpe25Context context,
-            IHostEnvironment webHost
+             IHostEnvironment webHost
           )
         {
-
             _context = context;
             _webHost = webHost;
-            
         }
 
         public void FilesToAPI(SpaceshipDto dto, Spaceship domain)
         {
-            if(dto.Files != null && dto.Files.Count > 0)
-
-                //kui ei ole wwwroot-s multipleFileUpload directoryt
+            if (dto.Files != null && dto.Files.Count > 0)
             {
-                if (!Directory.Exists(_webHost.ContentRootPath + "\\wwwroot\\multipleFiledUpload\\"))
-                {
-                    //tee directory wwrooti alla
-                    Directory.CreateDirectory(_webHost.ContentRootPath + "\\wwwroot\\multipleFiledUpload\\");
+                string uploadFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
 
+                if (!Directory.Exists(uploadFolder))
+                {
+                    Directory.CreateDirectory(uploadFolder);
                 }
-                
-                foreach(var file in dto.Files)
-                {
-                    //meil on vaja treha muutuja nimega uploadFolder.
-                    //sinna muutuja tha on vaja Path kombineerida
 
-                    string uploadFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.Name;
+                foreach (var file in dto.Files)
+                {
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                     string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
-                        //domaini thea FileToApi
-                        FileToApi path = new FileToApi
-                        {
-                            //tuleb ära MAPPIDA
-                            //domain ja ?
-
-                            
-                            Id = Guid.NewGuid(),
-                            ExistingFilePath = uniqueFileName,
-                            SpaceshipId = domain.Id
-                           
-                        };
-                        _context.FileToApis.AddAsync(path);
                     }
+
+                    FileToApi path = new FileToApi
+                    {
+                        Id = Guid.NewGuid(),
+                        ExistingFilePath = uniqueFileName,
+                        SpaceshipId = domain.Id
+                    };
+
+                    _context.FileToApis.Add(path);
                 }
+
+                _context.SaveChanges();
             }
         }
     }
