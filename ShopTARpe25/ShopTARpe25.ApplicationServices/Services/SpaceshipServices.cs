@@ -5,7 +5,6 @@ using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 
 
-
 namespace ShopTARpe25.ApplicationServices.Services
 {
 
@@ -25,13 +24,11 @@ namespace ShopTARpe25.ApplicationServices.Services
             _fileServices = fileServices;
         }
 
-        
-
         public async Task<Spaceship> Create(SpaceshipDto dto)
         {
             Spaceship domain = new();
 
-            domain.Id = dto.Id;
+            domain.Id = Guid.NewGuid();
             domain.Name = dto.Name;
             domain.Classification = dto.Classification;
             domain.BuiltDate = dto.BuiltDate;
@@ -39,9 +36,10 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.EnginePower = dto.EnginePower;
             domain.CreatedAt = DateTime.Now;
             domain.ModifiedAt = DateTime.Now;
-            //peame saama file teenustets välja kutsuda meetod,
-            //mis salvestab faili serverisse
-            _fileServices.FilesToAPI(dto, domain);
+            //peame saama File teenuse välja kutsuda,
+            //mis salvestab failid serverisse
+            _fileServices.FilesToApi(dto, domain);
+
 
             //siia tuleb kood, mis salvestab domain
             //objekti andmebaasi
@@ -69,7 +67,7 @@ namespace ShopTARpe25.ApplicationServices.Services
         {
             Spaceship spaceship = new();
 
-            spaceship.Id = Guid.NewGuid();
+            spaceship.Id = dto.Id;
             spaceship.Name = dto.Name;
             spaceship.Classification = dto.Classification;
             spaceship.BuiltDate = dto.BuiltDate;
@@ -77,13 +75,13 @@ namespace ShopTARpe25.ApplicationServices.Services
             spaceship.EnginePower = dto.EnginePower;
             spaceship.CreatedAt = dto.CreatedAt;
             spaceship.ModifiedAt = DateTime.Now;
-           
 
             _context.Spaceships.Update(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
         }
+
         public async Task<Spaceship> Delete(Guid id)
         {
             var result = await _context.Spaceships

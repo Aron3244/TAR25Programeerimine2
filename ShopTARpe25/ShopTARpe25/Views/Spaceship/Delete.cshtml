@@ -66,6 +66,12 @@
     </dl>
 </div>
 
+@foreach (var images in Model.Images)
+{
+    <partial name="_Images" model="images" />
+    <br />
+}
+
 <div>
     <form asp-action="DeleteConfirmation" asp-controller="Spaceship" method="post" style="display:inline;">
         <input type="hidden" name="id" value="@Model.Id" />

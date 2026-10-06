@@ -2,7 +2,7 @@
 
 namespace ShopTARpe25.Core.Dto
 {
-    public class FileToAptDto
+    public class FileToApiDto
     {
         public Guid Id { get; set; }
         //see muutuja hakkab nätama, kus asub meie file

@@ -14,11 +14,11 @@ namespace ShopTARpe25.Core.Dto
         public int? Crew { get; set; }
         public int? EnginePower { get; set; }
         public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToAptDto> fileToAptDtos { get; set; }
-        = new List<FileToAptDto>();
+        public IEnumerable<FileToApiDto> fileToAptDtos { get; set; }
+        = new List<FileToApiDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
-
+        public FileToApiDto[] FileToApiDtos { get; set; }
     } 
 }
 

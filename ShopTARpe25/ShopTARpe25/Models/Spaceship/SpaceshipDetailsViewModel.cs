@@ -1,6 +1,6 @@
 ﻿namespace ShopTARpe25.Models.Spaceship
 {
-    public class SpaceshipDetailsViewModels
+    public class SpaceshipDetailsViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
