@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShopTARpe25.Models.Spaceship;
+using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using Microsoft.EntityFrameworkCore;
+using ShopTARpe25.Models.Spaceship;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace ShopTARpe25.Controllers
@@ -70,7 +71,7 @@ namespace ShopTARpe25.Controllers
                 Crew = vm.Crew,
                 EnginePower = vm.EnginePower,
                 Files = vm.Files,
-                FileToApiDtos = vm.Image
+                FileToApiDtos = vm.Images
                     .Select(file => new FileToApiDto
                     {
                         Id = file.ImageId,
@@ -105,7 +106,7 @@ namespace ShopTARpe25.Controllers
                 .Where(x => x.SpaceshipId == id)
                 .Select(y => new ImageViewModel
                 {
-                    FilePath = "/multipleFileUpload/" + y.ExistingFilePath,
+                    FilePath = y.ExistingFilePath,
                     ImageId = y.Id,
                     SpaceshipId = y.SpaceshipId
                 }).ToArrayAsync();
@@ -137,6 +138,15 @@ namespace ShopTARpe25.Controllers
                 return NotFound();
             }
 
+            var images = await _context.FileToApis
+           .Where(x => x.SpaceshipId == id)
+           .Select(y => new ImageViewModel
+           {
+               FilePath =  y.ExistingFilePath,
+               ImageId = y.Id,
+               SpaceshipId = y.SpaceshipId
+           }).ToArrayAsync();
+
             var vm = new SpaceshipUpdateViewModel();
 
             vm.Id = spaceship.Id;
@@ -147,6 +157,7 @@ namespace ShopTARpe25.Controllers
             vm.EnginePower = spaceship.EnginePower;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
+            vm.Images.AddRange(images);
 
             return View(vm);
         }
