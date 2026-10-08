@@ -46,9 +46,12 @@
         @foreach (var images in Model.Images)
         {
             <partial name="_Images" model="images" />
-            <br />
+            
+            <input asp-action="removeImage" asp-controller="spaceship" asp-route-ImageId="@images.ImageId"
+            type="submit" class="btn btn-danger" value="remove Image" />
+
            
-        }
+        }add pilt history
 
             <input asp-action="Update" asp-controller="spaceship" type="submit" class="btn btn-success value="Update" />
 
