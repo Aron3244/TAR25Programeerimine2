@@ -1,9 +1,17 @@
-﻿@model ShopTARpe25.Models.Spaceship.SpaceshipCreateViewModel
-@{
-    ViewData["Title"] = "Create Spaceship";
+﻿@model ShopTARpe25.Models.Spaceship.SpaceshipCreateUpdateViewModel
+
+
+@if (Model.Id.HasValue)
+{
+    <h1>Create Spaceship</h1>
+    
+}
+else
+{
+    <h1>Create Spaceship</h1>
 }
 
-<h1>@ViewData["Title"]</h1>
+
 
 <form asp-action="Create" asp-controller="Spaceship" method="post" enctype="multipart/form-data">
     <div class="form-group">
