@@ -57,7 +57,7 @@ namespace ShopTARpe25.Controllers
         {
             SpaceshipCreateUpdateViewModel vm = new();
 
-            return View(vm);
+            return View("CreateUpdate",vm);
         }
 
         //kui oled teinud vormi, siis see meetod käivitatakse
@@ -77,7 +77,7 @@ namespace ShopTARpe25.Controllers
                 Crew = vm.Crew,
                 EnginePower = vm.EnginePower,
                 Files = vm.Files,
-                FileToApiDtos = vm.Images
+                FileToApiDtos = vm.Image
                     .Select(file => new FileToApiDto
                     {
                         Id = file.ImageId,
@@ -88,6 +88,11 @@ namespace ShopTARpe25.Controllers
 
             //kutsuda teenuse meetodit, mis salvestab andmed andmebaasi
             var result = await _spaceshipService.Create(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -153,7 +158,7 @@ namespace ShopTARpe25.Controllers
                SpaceshipId = y.SpaceshipId
            }).ToArrayAsync();
 
-            var vm = new SpaceshipUpdateViewModel();
+            var vm = new SpaceshipCreateUpdateViewModel();
 
             vm.Id = spaceship.Id;
             vm.Name = spaceship.Name;
@@ -163,9 +168,9 @@ namespace ShopTARpe25.Controllers
             vm.EnginePower = spaceship.EnginePower;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
-            vm.Images.AddRange(images);
+            vm.Image.AddRange(images);
 
-            return View(vm);
+            return View("CreateUpdate", vm);
         }
 
         [HttpPost]
