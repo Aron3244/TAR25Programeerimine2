@@ -1,4 +1,5 @@
-﻿@model ShopTARpe25.Core.Domain.Kindergarten
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@model ShopTARpe25.Core.Dto.KindergartenDto
 
 @{
     ViewData["Title"] = "Kustuta";
@@ -13,17 +14,29 @@
         <dt class="col-sm-3">Rühma nimi</dt>
         <dd class="col-sm-9">@Model.GroupName</dd>
 
+        <dt class="col-sm-3">Laste arv</dt>
+        <dd class="col-sm-9">@Model.ChildrenCount</dd>
+
         <dt class="col-sm-3">Lasteaia nimi</dt>
         <dd class="col-sm-9">@Model.KindergartenName</dd>
 
         <dt class="col-sm-3">Õpetaja nimi</dt>
         <dd class="col-sm-9">@Model.TeacherName</dd>
     </dl>
-    
-  <form asp-controller="Kindergarten" asp-action="Delete" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Kustuta" class="btn btn-danger" />
-    <a asp-action="Index" class="btn btn-secondary">Loobu</a>
-</form>
+
+    @if (Model.Image != null && Model.Image.Any())
+    {
+        <hr />
+        <div class="row">
+            @foreach (var image in Model.Image)
+            {
+                <partial name="_Images" model="image" view-data='new ViewDataDictionary(ViewData) { { "ShowRemove", false } }' />
+            }
+        </div>
+    }
+
+    <form asp-controller="Kindergarten" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="mt-3">
+        <input type="submit" value="Kustuta" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Loobu</a>
+    </form>
 </div>

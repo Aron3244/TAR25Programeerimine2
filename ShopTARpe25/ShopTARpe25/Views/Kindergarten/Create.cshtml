@@ -1,32 +1,49 @@
-﻿@model ShopTARpe25.Core.Domain.Kindergarten
+﻿@model ShopTARpe25.Core.Dto.KindergartenDto
 
 @{
-    ViewData["Title"] = "Lisa uus";
+    ViewData["Title"] = "Lisa uus rühm";
 }
 
 <h1>Lisa uus rühm</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group mb-3">
                 <label asp-for="GroupName" class="control-label">Rühma nimi</label>
                 <input asp-for="GroupName" class="form-control" />
+                <span asp-validation-for="GroupName" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-3">
                 <label asp-for="ChildrenCount" class="control-label">Laste arv</label>
-                <input asp-for="ChildrenCount" type="number" class="form-control" />
+                <input asp-for="ChildrenCount" class="form-control" type="number" />
+                <span asp-validation-for="ChildrenCount" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-3">
                 <label asp-for="KindergartenName" class="control-label">Lasteaia nimi</label>
                 <input asp-for="KindergartenName" class="form-control" />
+                <span asp-validation-for="KindergartenName" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-3">
                 <label asp-for="TeacherName" class="control-label">Õpetaja nimi</label>
                 <input asp-for="TeacherName" class="form-control" />
+                <span asp-validation-for="TeacherName" class="text-danger"></span>
             </div>
+
+
+            <div class="form-group mb-4">
+                <label class="control-label">Vali pilt / pildid</label>
+                <input type="file" name="Files" class="form-control" multiple />
+            </div>
+
             <div class="form-group">
-                <input type="submit" value="Salvesta" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Salvesta</button>
                 <a asp-action="Index" class="btn btn-secondary">Tagasi</a>
             </div>
         </form>

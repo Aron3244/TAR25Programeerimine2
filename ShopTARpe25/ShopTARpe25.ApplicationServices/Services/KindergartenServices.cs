@@ -76,5 +76,6 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             return domain;
         }
+
     }
 }

@@ -24,6 +24,7 @@ builder.Services.AddDbContext<ShopTARpe25Context>(options =>
 //}
 
 builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
+builder.Services.AddScoped<IFileServices, FileServices>();
 
 // Lisa enne rida: var app = builder.Build();
 

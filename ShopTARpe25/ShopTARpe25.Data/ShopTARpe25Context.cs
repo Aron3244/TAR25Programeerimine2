@@ -5,7 +5,6 @@ using ShopTARpe25.Core.Domain;
 
 namespace ShopTARpe25.Data
 {
-    //teha sellest classist DbContext, et saaks andmebaasi kasutada
     public class ShopTARpe25Context : DbContext
     {
         public ShopTARpe25Context(DbContextOptions<ShopTARpe25Context> options)
@@ -13,6 +12,7 @@ namespace ShopTARpe25.Data
         {
         }
 
+        public DbSet<FileToApi> FileToApis { get; set; }
         public DbSet<Kindergarten> Kindergartens { get; set; }
         public DbSet<Spaceship> Spaceships { get; set; }
     }

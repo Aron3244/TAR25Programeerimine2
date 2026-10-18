@@ -1,4 +1,4 @@
-﻿@model ShopTARpe25.Core.Domain.Kindergarten
+﻿@model ShopTARpe25.Core.Dto.KindergartenDto
 
 @{
     ViewData["Title"] = "Detailid";
@@ -20,15 +20,23 @@
 
         <dt class="col-sm-3">Õpetaja nimi</dt>
         <dd class="col-sm-9">@Model.TeacherName</dd>
-
-        <dt class="col-sm-3">Loodud</dt>
-        <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("g")</dd>
-
-        <dt class="col-sm-3">Viimati muudetud</dt>
-        <dd class="col-sm-9">@Model.UpdatedAt.ToLocalTime().ToString("g")</dd>
     </dl>
 </div>
-<div>
+
+
+@if (Model.Image != null && Model.Image.Any())
+{
+    <hr />
+    <h4>Pildid</h4>
+    <div class="row">
+        @foreach (var image in Model.Image)
+        {
+            <partial name="_Images" model="image" />
+        }
+    </div>
+}
+
+<div class="mt-3">
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Muuda</a>
     <a asp-action="Index" class="btn btn-secondary">Tagasi nimekirja</a>
 </div>

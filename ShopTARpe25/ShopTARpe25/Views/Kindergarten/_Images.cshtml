@@ -1,0 +1,24 @@
+﻿@model ShopTARpe25.Core.Dto.ImageViewModel
+
+@{
+    var photoSrc = string.IsNullOrEmpty(Model.FilePath)
+        ? "/images/noimage.jpg"
+        : "/images/kindergarten/" + Model.FilePath;
+    var showRemove = ViewData["ShowRemove"] as bool? ?? true;
+    var returnTo = ViewData["ReturnTo"] as string ?? "Details";
+}
+
+<div class="col-12 mb-3">
+    <div class="mb-1 text-muted small">@Model.FilePath</div>
+    <img class="img-thumbnail" src="@photoSrc" style="max-width: 400px;" alt="Pilt" />
+
+    @if (showRemove)
+    {
+        <form asp-action="RemoveImage" asp-controller="Kindergarten" method="post" class="mt-2">
+            <input type="hidden" name="imageId" value="@Model.ImageId" />
+            <input type="hidden" name="kindergartenId" value="@Model.KindergartenId" />
+            <input type="hidden" name="returnTo" value="@returnTo" />
+            <button type="submit" class="btn btn-danger btn-sm">Kustuta see pilt</button>
+        </form>
+    }
+</div>
