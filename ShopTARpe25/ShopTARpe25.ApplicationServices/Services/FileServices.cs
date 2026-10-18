@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -155,3 +156,4 @@ namespace ShopTARpe25.ApplicationServices.Services
         }
     }
 }
+

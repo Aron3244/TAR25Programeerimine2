@@ -5,6 +5,7 @@ using System.Text;
 namespace ShopTARpe25.Core.Domain
 {
     public class FileToApi
+
     {
         public Guid Id { get; set; }
         public string? ImageTitle { get; set; }
@@ -13,3 +14,4 @@ namespace ShopTARpe25.Core.Domain
         public Guid? KindergartenId { get; set; }
     }
 }
+
