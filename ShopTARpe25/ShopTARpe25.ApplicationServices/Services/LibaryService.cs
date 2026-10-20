@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
+using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace ShopTARpe25.ApplicationServices.Services
 {
-    public class LibaryService
+    public class LibaryService : IBookServices
     {
         private readonly ShopTARpe25Context _context;
 

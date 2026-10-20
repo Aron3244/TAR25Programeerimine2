@@ -3,7 +3,7 @@ using ShopTARpe25.Core.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShopTARpe25.Core.Domain
+namespace ShopTARpe25.Core.ServiceInterface
 {
     public interface IBookServices
     {

@@ -4,6 +4,8 @@ using ShopTARpe25.ApplicationServices.Services;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 
+
+
 namespace ShopTARpe25
 {
     public class Program
@@ -14,7 +16,7 @@ namespace ShopTARpe25
 
             builder.Services.AddDbContext<ShopTARpe25Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+      
 
             //selleks, et tuleb installida Microsoft.EntityFrameworkCore.SqlServer
             //ja Microsoft.EntityFrameworkCore.Tools NuGet paketid
@@ -27,6 +29,8 @@ namespace ShopTARpe25
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+ 
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
