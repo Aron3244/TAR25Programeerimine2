@@ -1,0 +1,60 @@
+﻿@model ShopTARpe25.Core.Dto.BookDto
+
+@{
+    ViewData["Title"] = "Lisa raamat";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📖 Lisa uus raamat</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Raamatu pealkiri</label>
+                            <input asp-for="Title" class="form-control" placeholder="Sisesta pealkiri" required />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Author" class="form-label">Autor</label>
+                            <input asp-for="Author" class="form-control" placeholder="Sisesta autor" required />
+                            <span asp-validation-for="Author" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PublishedYear" class="form-label">Ilmumisaasta</label>
+                            <input asp-for="PublishedYear" type="number" class="form-control" placeholder="Nt. 2024" required />
+                            <span asp-validation-for="PublishedYear" class="text-danger"></span>
+                        </div>
+
+                        @if (Model?.Files != null || true) 
+                        {
+                            <div class="mb-4">
+                                <label asp-for="Files" class="form-label">Raamatu kaanepilt / failid (Valikuline)</label>
+                                <input asp-for="Files" type="file" multiple class="form-control" />
+                                <span asp-validation-for="Files" class="text-danger"></span>
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">⬅ Tagasi nimekirja</a>
+                            <button type="submit" class="btn btn-primary">💾 Salvesta raamat</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
