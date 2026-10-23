@@ -1,0 +1,26 @@
+﻿@model ShopTARpe25.Core.Domain.Book
+
+<h1>Details</h1>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Title</dt>
+        <dd class="col-sm-10">@Model.Title</dd>
+        
+        <dt class="col-sm-2">Author</dt>
+        <dd class="col-sm-10">@Model.Author</dd>
+        
+        <dt class="col-sm-2">PublishedYear</dt>
+        <dd class="col-sm-10">@Model.PublishedYear</dd>
+        
+        <dt class="col-sm-2">IsAvailable</dt>
+        <dd class="col-sm-10">@Model.IsAvailable</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="UpdateBookTitle" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

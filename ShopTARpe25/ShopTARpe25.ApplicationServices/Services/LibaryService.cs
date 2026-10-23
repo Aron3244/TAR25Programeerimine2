@@ -6,7 +6,6 @@ using ShopTARpe25.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShopTARpe25.ApplicationServices.Services
@@ -32,8 +31,25 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             await _context.Books.AddAsync(newBook);
             await _context.SaveChangesAsync();
-
             return newBook;
+        }
+
+        public async Task<Reader> CreateReader(ReaderDto dto)
+        {
+            Reader newReader = new()
+            {
+                FullName = dto.FullName,
+                Email = dto.Email
+            };
+
+            await _context.Readers.AddAsync(newReader);
+            await _context.SaveChangesAsync();
+            return newReader;
+        }
+
+        public async Task<IEnumerable<Book>> GetAllBooks()
+        {
+            return await _context.Books.ToListAsync();
         }
 
         public async Task<IEnumerable<Book>> GetBooksByYear(int year)
@@ -67,31 +83,20 @@ namespace ShopTARpe25.ApplicationServices.Services
         public async Task<Book?> UpdateBookTitle(int id, string newTitle)
         {
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
-
-            if (book == null)
-            {
-                return null;
-            }
+            if (book == null) return null;
 
             book.Title = newTitle;
-
             _context.Books.Update(book);
             await _context.SaveChangesAsync();
-
             return book;
         }
 
         public async Task<Loan?> ReturnBook(int loanId)
         {
-            var loan = await _context.Loans
-                .Include(l => l.Book)
-                .FirstOrDefaultAsync(l => l.Id == loanId);
+            var loan = await _context.Loans.Include(l => l.Book).FirstOrDefaultAsync(l => l.Id == loanId);
+            if (loan == null) return null;
 
-            if (loan == null)
-            {
-                return null;
-            }
-
+            loan.ReturnDate = DateTime.Now;
             if (loan.Book != null)
             {
                 loan.Book.IsAvailable = true;
@@ -99,22 +104,16 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             _context.Loans.Update(loan);
             await _context.SaveChangesAsync();
-
             return loan;
         }
 
-        public async Task<bool> DeleteBook(int id)
+        public async Task<bool> Delete(int id)
         {
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
-
-            if (book == null)
-            {
-                return false;
-            }
+            if (book == null) return false;
 
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
-
             return true;
         }
     }
