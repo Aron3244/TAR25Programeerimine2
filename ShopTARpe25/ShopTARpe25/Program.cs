@@ -23,9 +23,12 @@ namespace ShopTARpe25
             //kui installitud, siis vaadata namespaces Microsoft.EntityFrameworkCore
 
             builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
-            //see on dependecy injection, mis võimaldab meil kasutada teenusied contrlleritest
+    
             builder.Services.AddScoped<IFileServices, FileServices>();
-            // Add services to the container.
+
+            builder.Services.AddScoped<IBookServices, LibaryService>();
+
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

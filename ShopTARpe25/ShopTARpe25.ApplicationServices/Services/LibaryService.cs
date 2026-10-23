@@ -5,7 +5,9 @@ using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShopTARpe25.ApplicationServices.Services
 {
@@ -18,51 +20,102 @@ namespace ShopTARpe25.ApplicationServices.Services
             _context = context;
         }
 
-        public async Task AddBook(BookDto dto)
+        public async Task<Book> Create(BookDto dto)
         {
-            Book newBook = new();   
-            
-                newBook.Title = dto.Title;
-                newBook.Author = dto.Author;
-                newBook.PublishedYear = dto.PublishedYear;
-                newBook.IsAvailable = true;
+            Book newBook = new()
+            {
+                Title = dto.Title,
+                Author = dto.Author,
+                PublishedYear = dto.PublishedYear,
+                IsAvailable = true
+            };
 
             await _context.Books.AddAsync(newBook);
             await _context.SaveChangesAsync();
+
+            return newBook;
         }
+
         public async Task<IEnumerable<Book>> GetBooksByYear(int year)
         {
-     
             return await _context.Books
                 .Where(b => b.PublishedYear == year)
                 .ToListAsync();
         }
 
-
         public async Task<Book?> GetBookByTitle(string title)
         {
-           
             return await _context.Books
                 .FirstOrDefaultAsync(b => b.Title.ToLower().Contains(title.ToLower()));
         }
 
-       
         public async Task<IEnumerable<Book>> GetCurrentlyLoanedBooks()
         {
-
             return await _context.Books
                 .Where(b => b.IsAvailable == false)
                 .ToListAsync();
         }
 
-     
         public async Task<IEnumerable<Loan>> GetLoansByReaderId(int readerId)
         {
-        
             return await _context.Loans
                 .Include(l => l.Book)
                 .Where(l => l.ReaderId == readerId)
                 .ToListAsync();
+        }
+
+        public async Task<Book?> UpdateBookTitle(int id, string newTitle)
+        {
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return null;
+            }
+
+            book.Title = newTitle;
+
+            _context.Books.Update(book);
+            await _context.SaveChangesAsync();
+
+            return book;
+        }
+
+        public async Task<Loan?> ReturnBook(int loanId)
+        {
+            var loan = await _context.Loans
+                .Include(l => l.Book)
+                .FirstOrDefaultAsync(l => l.Id == loanId);
+
+            if (loan == null)
+            {
+                return null;
+            }
+
+            if (loan.Book != null)
+            {
+                loan.Book.IsAvailable = true;
+            }
+
+            _context.Loans.Update(loan);
+            await _context.SaveChangesAsync();
+
+            return loan;
+        }
+
+        public async Task<bool> DeleteBook(int id)
+        {
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return false;
+            }
+
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
