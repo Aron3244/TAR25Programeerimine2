@@ -22,9 +22,8 @@ namespace ShopTARpe25.Controllers
                 return View(filteredBooks);
             }
 
-            
-            var loanedBooks = await _bookServices.GetCurrentlyLoanedBooks();
-            return View(loanedBooks);
+            var allBooks = await _bookServices.GetAllBooks();
+            return View(allBooks);
         }
 
         [HttpGet]
@@ -33,24 +32,65 @@ namespace ShopTARpe25.Controllers
             return View();
         }
 
-    
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BookDto dto)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(dto);
-            }
-
-            var result = await _bookServices.Create(dto);
-
-            if (result != null)
-            {
+                await _bookServices.Create(dto);
                 return RedirectToAction(nameof(Index));
             }
 
             return View(dto);
+        }
+        
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _bookServices.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var books = await _bookServices.GetAllBooks();
+            var book = books.FirstOrDefault(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(book);
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateBookTitle(int id)
+        {
+            var books = await _bookServices.GetAllBooks();
+            var book = books.FirstOrDefault(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(book);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateBookTitle(int id, string newTitle)
+        {
+            var updatedBook = await _bookServices.UpdateBookTitle(id, newTitle);
+
+            if (updatedBook == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
