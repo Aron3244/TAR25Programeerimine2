@@ -1,0 +1,12 @@
+﻿@model ShopTARpe25.Core.Dto.BookDto
+
+<h2>Muuda raamatut</h2>
+
+<form asp-action="Update" method="post">
+    <input type="hidden" asp-for="Id" />
+    <p><input asp-for="Title" /></p>
+    <p><input asp-for="Author" /></p>
+    <p><input asp-for="PublishedYear" /></p>
+    <button type="submit" class="btn btn-primary">Salvesta</button>
+    <a asp-action="Index" class="btn btn-secondary">Tagasi</a>
+</form>

@@ -1,31 +1,42 @@
-﻿@model ShopTARpe25.Core.Domain.Book
+﻿@model IEnumerable<ShopTARpe25.Core.Domain.Book>
 
-<h1>Edit Book Title</h1>
+<h2>Raamatukogu</h2>
 
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UpdateBookTitle" method="post">
-            <input type="hidden" asp-for="Id" />
-            
-            <div class="form-group mb-3">
-                <label class="control-label">Praegune autor</label>
-                <input class="form-control" value="@Model.Author" disabled />
-            </div>
+<form method="get" asp-action="Index">
+    <input type="number" name="year" placeholder="Ilmumisaasta" />
+    <input type="text" name="title" placeholder="Pealkiri" />
+    <button type="submit" class="btn btn-primary">Otsi</button>
+</form>
 
-            <div class="form-group mb-3">
-                <label asp-for="Title" class="control-label">Uus pealkiri</label>
-                <input asp-for="Title" class="form-control" name="newTitle" value="@Model.Title" />
-            </div>
+<p>
+    <a asp-action="Index">Kõik</a> |
+    <a asp-action="Loaned">Laenutuses</a> |
+    <a asp-action="Create">Lisa raamat</a> |
+    <a asp-action="CreateReader">Lisa lugeja</a> |
+    <a asp-action="LoanBook">Laenuta</a> |
+    <a asp-action="ReaderLoans">Lugeja laenutused</a>
+</p>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="mt-3">
-    <a asp-action="Index">Back to List</a>
-</div>
+<table class="table">
+    <tr>
+        <th>Pealkiri</th>
+        <th>Autor</th>
+        <th>Aasta</th>
+        <th>Saadaval</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>@item.PublishedYear</td>
+            <td>@(item.IsAvailable ? "Jah" : "Ei")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Vaata</a> |
+                <a asp-action="Update" asp-route-id="@item.Id">Muuda</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Kustuta</a>
+            </td>
+        </tr>
+    }
+</table>

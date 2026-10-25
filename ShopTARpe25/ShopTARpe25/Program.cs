@@ -27,6 +27,7 @@ namespace ShopTARpe25
             builder.Services.AddScoped<IFileServices, FileServices>();
 
             builder.Services.AddScoped<IBookServices, LibaryService>();
+            
 
 
             builder.Services.AddControllersWithViews();

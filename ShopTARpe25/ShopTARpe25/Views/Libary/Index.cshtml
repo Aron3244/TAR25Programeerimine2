@@ -1,49 +1,42 @@
 ﻿@model IEnumerable<ShopTARpe25.Core.Domain.Book>
 
-<h1>Index</h1>
+<h2>Raamatukogu</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<form method="get" class="mb-2">
+<form method="get" asp-action="Index" class="mb-3">
     <input type="number" name="year" placeholder="Ilmumisaasta" />
     <input type="text" name="title" placeholder="Pealkiri" />
-    <button class="btn btn-primary">Otsi</button>
-    <a asp-action="Index">Kõik</a> |
-    <a asp-action="Loaned">Laenutuses</a> |
-    <a asp-action="LoanBook">Laenuta</a> |
-    <a asp-action="ReaderLoans">Lugeja laenutused</a> |
-    <a asp-action="CreateReader">Lisa lugeja</a>
+    <button type="submit" class="btn btn-primary btn-sm">Otsi</button>
 </form>
 
+<p>
+    <a asp-action="Create" class="btn btn-success btn-sm">Lisa raamat</a>
+    <a asp-action="CreateReader" class="btn btn-success btn-sm">Lisa lugeja</a>
+    <a asp-action="LoanBook" class="btn btn-secondary btn-sm">Laenuta</a>
+    <a asp-action="ReaderLoans" class="btn btn-secondary btn-sm">Lugeja laenutused</a>
+    <a asp-action="Loaned" class="btn btn-secondary btn-sm">Laenutuses</a>
+    <a asp-action="Index" class="btn btn-secondary btn-sm">Kõik</a>
+</p>
 
 <table class="table">
-    <thead>
+    <tr>
+        <th>Pealkiri</th>
+        <th>Autor</th>
+        <th>Aasta</th>
+        <th>Saadaval</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>PublishedYear</th>
-            <th>IsAvailable</th>
-            <th></th>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>@item.PublishedYear</td>
+            <td>@(item.IsAvailable ? "Jah" : "Ei")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Vaata</a>
+                <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Muuda</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Kustuta</a>
+            </td>
         </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td>@item.Author</td>
-                    <td>@item.PublishedYear</td>
-                    <td>@item.IsAvailable</td>
-                    <td>
-                        <a asp-action="UpdateBookTitle" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
+    }
 </table>

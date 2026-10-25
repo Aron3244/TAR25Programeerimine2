@@ -3,10 +3,6 @@ using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShopTARpe25.ApplicationServices.Services
 {
@@ -21,30 +17,30 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public async Task<Book> Create(BookDto dto)
         {
-            Book newBook = new()
-            {
-                Title = dto.Title,
-                Author = dto.Author,
-                PublishedYear = dto.PublishedYear,
-                IsAvailable = true
-            };
+            Book book = new();
 
-            await _context.Books.AddAsync(newBook);
+            book.Title = dto.Title;
+            book.Author = dto.Author;
+            book.PublishedYear = dto.PublishedYear;
+            book.IsAvailable = true;
+
+            await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
-            return newBook;
+
+            return book;
         }
 
         public async Task<Reader> CreateReader(ReaderDto dto)
         {
-            Reader newReader = new()
-            {
-                FullName = dto.FullName,
-                Email = dto.Email
-            };
+            Reader reader = new();
 
-            await _context.Readers.AddAsync(newReader);
+            reader.FullName = dto.FullName;
+            reader.Email = dto.Email;
+
+            await _context.Readers.AddAsync(reader);
             await _context.SaveChangesAsync();
-            return newReader;
+
+            return reader;
         }
 
         public async Task<IEnumerable<Book>> GetAllBooks()
@@ -52,48 +48,9 @@ namespace ShopTARpe25.ApplicationServices.Services
             return await _context.Books.ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetBooksByYear(int year)
+        public async Task<IEnumerable<Book>> GetAvailableBooks()
         {
-            return await _context.Books
-                .Where(b => b.PublishedYear == year)
-                .ToListAsync();
-        }
-
-        public async Task<Book?> GetBookByTitle(string title)
-        {
-            return await _context.Books
-                .FirstOrDefaultAsync(b => b.Title.ToLower().Contains(title.ToLower()));
-        }
-
-        public async Task<IEnumerable<Book>> GetCurrentlyLoanedBooks()
-        {
-            return await _context.Books
-                .Where(b => b.IsAvailable == false)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Loan>> GetLoansByReaderId(int readerId)
-        {
-            return await _context.Loans
-                .Include(l => l.Book)
-                .Where(l => l.ReaderId == readerId)
-                .ToListAsync();
-        }
-
-        public async Task<Book?> UpdateBookTitle(int id, string newTitle)
-        {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
-            if (book == null) return null;
-
-            book.Title = newTitle;
-            _context.Books.Update(book);
-            await _context.SaveChangesAsync();
-            return book;
-        }
-
-        public async Task<Book?> GetBookById(int id)
-        {
-            return await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            return await _context.Books.Where(x => x.IsAvailable == true).ToListAsync();
         }
 
         public async Task<IEnumerable<Reader>> GetAllReaders()
@@ -101,57 +58,112 @@ namespace ShopTARpe25.ApplicationServices.Services
             return await _context.Readers.ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetAvailableBooks()
+        public async Task<IEnumerable<Book>> GetBooksByYear(int year)
         {
-            return await _context.Books.Where(b => b.IsAvailable).ToListAsync();
+            return await _context.Books.Where(x => x.PublishedYear == year).ToListAsync();
+        }
+
+        public async Task<Book?> GetBookByTitle(string title)
+        {
+            return await _context.Books.FirstOrDefaultAsync(x => x.Title.Contains(title));
+        }
+
+        public async Task<Book?> GetBookById(int id)
+        {
+            return await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<Book>> GetCurrentlyLoanedBooks()
+        {
+            return await _context.Books.Where(x => x.IsAvailable == false).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Loan>> GetLoansByReaderId(int readerId)
+        {
+            return await _context.Loans
+                .Include(x => x.Book)
+                .Where(x => x.ReaderId == readerId)
+                .ToListAsync();
+        }
+
+        public async Task<Book?> Update(BookDto dto)
+        {
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (book == null)
+            {
+                return null;
+            }
+
+            book.Title = dto.Title;
+            book.Author = dto.Author;
+            book.PublishedYear = dto.PublishedYear;
+
+            await _context.SaveChangesAsync();
+
+            return book;
         }
 
         public async Task<Loan?> LoanBook(int bookId, int readerId)
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
-            var readerExists = await _context.Readers.AnyAsync(r => r.id == readerId);
-            if (book == null || !readerExists || !book.IsAvailable) return null;
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
+            var reader = await _context.Readers.FirstOrDefaultAsync(x => x.Id == readerId);
 
-            Loan loan = new()
+            if (book == null || reader == null || book.IsAvailable == false)
             {
-                BookId = bookId,
-                ReaderId = readerId,
-                LoanDate = DateTime.Now,
-                ReturnDate = null
-            };
+                return null;
+            }
+
+            Loan loan = new();
+
+            loan.BookId = bookId;
+            loan.ReaderId = readerId;
+            loan.LoanDate = DateTime.Now;
 
             book.IsAvailable = false;
+
             await _context.Loans.AddAsync(loan);
-            await _context.SaveChangesAsync();   
+            await _context.SaveChangesAsync();
+
             return loan;
         }
 
         public async Task<Loan?> ReturnBook(int loanId)
         {
-            var loan = await _context.Loans.Include(l => l.Book).FirstOrDefaultAsync(l => l.Id == loanId);
-            if (loan == null || loan.ReturnDate != null) return null;  
+            var loan = await _context.Loans
+                .Include(x => x.Book)
+                .FirstOrDefaultAsync(x => x.Id == loanId);
+
+            if (loan == null || loan.ReturnDate != null)
+            {
+                return null;
+            }
 
             loan.ReturnDate = DateTime.Now;
-            if (loan.Book != null) loan.Book.IsAvailable = true;
+            loan.Book.IsAvailable = true;
 
             await _context.SaveChangesAsync();
+
             return loan;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
-            if (book == null) return false;
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
 
-            var loans = await _context.Loans.Where(l => l.BookId == id).ToListAsync();
+            if (book == null || book.IsAvailable == false)
+            {
+                return false;
+            }
 
-           
-            if (!book.IsAvailable || loans.Any(l => l.ReturnDate == null)) return false;
+            var loans = await _context.Loans.Where(x => x.BookId == id).ToListAsync();
 
-            _context.Loans.RemoveRange(loans);   
+            _context.Loans.RemoveRange(loans);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
+
             return true;
         }
+
     }
 }

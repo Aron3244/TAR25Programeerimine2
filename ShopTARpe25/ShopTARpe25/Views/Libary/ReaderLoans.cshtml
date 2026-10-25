@@ -1,26 +1,32 @@
 ﻿@model IEnumerable<ShopTARpe25.Core.Domain.Loan>
+
 <h2>Lugeja laenutused</h2>
 
 <form method="get" asp-action="ReaderLoans" class="mb-3">
     <input type="number" name="readerId" value="@ViewBag.ReaderId" placeholder="Lugeja ID" />
-    <button class="btn btn-primary">Otsi</button>
+    <a asp-action="Index" class="btn btn-secondary btn-sm">Tagasi</a>
 </form>
 
 <table class="table">
-    <tr><th>Raamat</th><th>Laenutatud</th><th>Tagastatud</th><th></th></tr>
-    @foreach (var l in Model)
+    <tr>
+        <th>Raamat</th>
+        <th>Laenutatud</th>
+        <th>Tagastatud</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
     {
         <tr>
-            <td>@l.Book.Title</td>
-            <td>@l.LoanDate.ToString("dd.MM.yyyy")</td>
-            <td>@(l.ReturnDate?.ToString("dd.MM.yyyy") ?? "Pole tagastatud")</td>
+            <td>@item.Book.Title</td>
+            <td>@item.LoanDate.ToString("dd.MM.yyyy")</td>
+            <td>@(item.ReturnDate?.ToString("dd.MM.yyyy") ?? "Pole tagastatud")</td>
             <td>
-                @if (l.ReturnDate == null)
+                @if (item.ReturnDate == null)
                 {
                     <form asp-action="ReturnBook" method="post">
-                        <input type="hidden" name="loanId" value="@l.Id" />
-                        <input type="hidden" name="readerId" value="@l.ReaderId" />
-                        <button class="btn btn-sm btn-success">Tagasta</button>
+                        <input type="hidden" name="loanId" value="@item.Id" />
+                        <input type="hidden" name="readerId" value="@item.ReaderId" />
+                        <button type="submit" class="btn btn-success btn-sm">Tagasta</button>
                     </form>
                 }
             </td>

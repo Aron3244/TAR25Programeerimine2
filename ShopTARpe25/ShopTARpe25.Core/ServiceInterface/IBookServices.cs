@@ -8,18 +8,19 @@ namespace ShopTARpe25.Core.ServiceInterface
     public interface IBookServices
     {
         Task<Book> Create(BookDto dto);
+        Task<Reader> CreateReader(ReaderDto dto);
         Task<IEnumerable<Book>> GetAllBooks();
+        Task<IEnumerable<Book>> GetAvailableBooks();
+        Task<IEnumerable<Reader>> GetAllReaders();
         Task<IEnumerable<Book>> GetBooksByYear(int year);
         Task<Book?> GetBookByTitle(string title);
+        Task<Book?> GetBookById(int id);
         Task<IEnumerable<Book>> GetCurrentlyLoanedBooks();
         Task<IEnumerable<Loan>> GetLoansByReaderId(int readerId);
-        Task<Book?> UpdateBookTitle(int id, string newTitle);
+        Task<Book?> Update(BookDto dto);
+        Task<Loan?> LoanBook(int bookId, int readerId);
         Task<Loan?> ReturnBook(int loanId);
         Task<bool> Delete(int id);
-        Task<Reader> CreateReader(ReaderDto dto);
-        Task<Book?> GetBookById(int id);
-        Task<IEnumerable<Reader>> GetAllReaders();
-        Task<IEnumerable<Book>> GetAvailableBooks();
-        Task<Loan?> LoanBook(int bookId, int readerId);
     }
 }
+
