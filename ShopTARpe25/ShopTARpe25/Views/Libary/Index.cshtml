@@ -5,6 +5,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="get" class="mb-2">
+    <input type="number" name="year" placeholder="Ilmumisaasta" />
+    <input type="text" name="title" placeholder="Pealkiri" />
+    <button class="btn btn-primary">Otsi</button>
+    <a asp-action="Index">Kõik</a> |
+    <a asp-action="Loaned">Laenutuses</a> |
+    <a asp-action="LoanBook">Laenuta</a> |
+    <a asp-action="ReaderLoans">Lugeja laenutused</a> |
+    <a asp-action="CreateReader">Lisa lugeja</a>
+</form>
+
 
 <table class="table">
     <thead>

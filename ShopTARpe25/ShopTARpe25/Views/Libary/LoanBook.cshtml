@@ -1,0 +1,12 @@
+﻿<h2>Laenuta raamat</h2>
+<form asp-action="LoanBook" method="post">
+    <div class="mb-3">
+        <label>Raamat</label>
+        <select name="bookId" asp-items="ViewBag.Books" class="form-control"></select>
+    </div>
+    <div class="mb-3">
+        <label>Lugeja</label>
+        <select name="readerId" asp-items="ViewBag.Readers" class="form-control"></select>
+    </div>
+    <button class="btn btn-primary">Laenuta</button>
+</form>

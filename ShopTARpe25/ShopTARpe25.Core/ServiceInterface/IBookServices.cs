@@ -16,5 +16,10 @@ namespace ShopTARpe25.Core.ServiceInterface
         Task<Book?> UpdateBookTitle(int id, string newTitle);
         Task<Loan?> ReturnBook(int loanId);
         Task<bool> Delete(int id);
+        Task<Reader> CreateReader(ReaderDto dto);
+        Task<Book?> GetBookById(int id);
+        Task<IEnumerable<Reader>> GetAllReaders();
+        Task<IEnumerable<Book>> GetAvailableBooks();
+        Task<Loan?> LoanBook(int bookId, int readerId);
     }
 }

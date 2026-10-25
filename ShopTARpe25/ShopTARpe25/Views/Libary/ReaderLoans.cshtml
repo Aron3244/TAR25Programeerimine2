@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ShopTARpe25.Core.Domain.Loan>
+<h2>Lugeja laenutused</h2>
+
+<form method="get" asp-action="ReaderLoans" class="mb-3">
+    <input type="number" name="readerId" value="@ViewBag.ReaderId" placeholder="Lugeja ID" />
+    <button class="btn btn-primary">Otsi</button>
+</form>
+
+<table class="table">
+    <tr><th>Raamat</th><th>Laenutatud</th><th>Tagastatud</th><th></th></tr>
+    @foreach (var l in Model)
+    {
+        <tr>
+            <td>@l.Book.Title</td>
+            <td>@l.LoanDate.ToString("dd.MM.yyyy")</td>
+            <td>@(l.ReturnDate?.ToString("dd.MM.yyyy") ?? "Pole tagastatud")</td>
+            <td>
+                @if (l.ReturnDate == null)
+                {
+                    <form asp-action="ReturnBook" method="post">
+                        <input type="hidden" name="loanId" value="@l.Id" />
+                        <input type="hidden" name="readerId" value="@l.ReaderId" />
+                        <button class="btn btn-sm btn-success">Tagasta</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+</table>

@@ -91,18 +91,49 @@ namespace ShopTARpe25.ApplicationServices.Services
             return book;
         }
 
+        public async Task<Book?> GetBookById(int id)
+        {
+            return await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+        }
+
+        public async Task<IEnumerable<Reader>> GetAllReaders()
+        {
+            return await _context.Readers.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetAvailableBooks()
+        {
+            return await _context.Books.Where(b => b.IsAvailable).ToListAsync();
+        }
+
+        public async Task<Loan?> LoanBook(int bookId, int readerId)
+        {
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+            var readerExists = await _context.Readers.AnyAsync(r => r.id == readerId);
+            if (book == null || !readerExists || !book.IsAvailable) return null;
+
+            Loan loan = new()
+            {
+                BookId = bookId,
+                ReaderId = readerId,
+                LoanDate = DateTime.Now,
+                ReturnDate = null
+            };
+
+            book.IsAvailable = false;
+            await _context.Loans.AddAsync(loan);
+            await _context.SaveChangesAsync();   
+            return loan;
+        }
+
         public async Task<Loan?> ReturnBook(int loanId)
         {
             var loan = await _context.Loans.Include(l => l.Book).FirstOrDefaultAsync(l => l.Id == loanId);
-            if (loan == null) return null;
+            if (loan == null || loan.ReturnDate != null) return null;  
 
             loan.ReturnDate = DateTime.Now;
-            if (loan.Book != null)
-            {
-                loan.Book.IsAvailable = true;
-            }
+            if (loan.Book != null) loan.Book.IsAvailable = true;
 
-            _context.Loans.Update(loan);
             await _context.SaveChangesAsync();
             return loan;
         }
@@ -112,6 +143,12 @@ namespace ShopTARpe25.ApplicationServices.Services
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book == null) return false;
 
+            var loans = await _context.Loans.Where(l => l.BookId == id).ToListAsync();
+
+           
+            if (!book.IsAvailable || loans.Any(l => l.ReturnDate == null)) return false;
+
+            _context.Loans.RemoveRange(loans);   
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return true;
