@@ -7,24 +7,26 @@ body {
     .navbar, .navbar-expand-sm {
         background-color: lightblue !important;
         border-bottom-right-radius: 20px;
+
     }
 
 
 
 
-    table td {
+    .table td {
         background-color: lightblue !important;
         border: 2px solid black;
+        
     }
 
-    table th {
+    .table th {
         background-color: lightblue !important;
         border-block-start: 2px solid black;
     }
 
-    btn {
-        border: 2px solid black;
-        border-radius: 100px;
+    .btn {
+        border-radius: 70%;
+       
     }
 
 
@@ -34,9 +36,7 @@ body {
         background-color: lightblue !important;
     }
 
-    input .form-control
-
-    {
+    input .form-control {
         background-color: lightblue !important;
     }
 }

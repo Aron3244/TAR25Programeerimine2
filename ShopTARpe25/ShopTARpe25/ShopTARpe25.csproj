@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\multipleFileUpload\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\css\SpaceshipStylet.css" />
   </ItemGroup>
 
