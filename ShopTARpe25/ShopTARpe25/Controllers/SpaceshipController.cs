@@ -55,7 +55,7 @@ namespace ShopTARpe25.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            SpaceshipCreateUpdateViewModel vm = new();
+            RealeEstateCreateUpdate vm = new();
 
             return View("CreateUpdate",vm);
         }
@@ -63,7 +63,7 @@ namespace ShopTARpe25.Controllers
         //kui oled teinud vormi, siis see meetod käivitatakse
         //saadab andmed serverisse, kus need salvestatakse andmebaasi
         [HttpPost]
-        public async Task<IActionResult> Create(SpaceshipCreateUpdateViewModel vm)
+        public async Task<IActionResult> Create(RealeEstateCreateUpdate vm)
         {
             //luua vaheinstants, mis sisaldab andmeid, mis on saadud vormist
             //need andmed tuleb edasi saata dto-sse, mis on mõeldud andmebaasi salvestamiseks
@@ -158,7 +158,7 @@ namespace ShopTARpe25.Controllers
                SpaceshipId = y.SpaceshipId
            }).ToArrayAsync();
 
-            var vm = new SpaceshipCreateUpdateViewModel();
+            var vm = new RealeEstateCreateUpdate();
 
             vm.Id = spaceship.Id;
             vm.Name = spaceship.Name;

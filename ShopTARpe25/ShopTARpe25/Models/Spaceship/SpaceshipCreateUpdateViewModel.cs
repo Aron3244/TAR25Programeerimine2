@@ -1,6 +1,6 @@
 ﻿namespace ShopTARpe25.Models.Spaceship
 {
-    public class SpaceshipCreateUpdateViewModel
+    public class SpaceshipUpdateCretaeViewModel
     {
         public Guid? Id { get; set; }
         public string Name { get; set; } = string.Empty;
