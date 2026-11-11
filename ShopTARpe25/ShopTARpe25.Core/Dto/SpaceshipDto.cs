@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace ShopTARpe25.Core.Dto
 {
@@ -13,12 +12,12 @@ namespace ShopTARpe25.Core.Dto
         public DateTime? BuiltDate { get; set; }
         public int? Crew { get; set; }
         public int? EnginePower { get; set; }
+
         public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> fileToAptDtos { get; set; }
-        = new List<FileToApiDto>();
+        public IEnumerable<FileToApiDto> FileToApiDtos { get; set; }
+            = new List<FileToApiDto>();
+
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
-        public FileToApiDto[] FileToApiDtos { get; set; }
-    } 
+    }
 }
-

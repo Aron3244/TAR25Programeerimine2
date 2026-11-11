@@ -26,7 +26,7 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             domain.Id = Guid.NewGuid();
             domain.Area = dto.Area;
- 
+            domain.Address = dto.Address;
             domain.RoomNumber = dto.RoomNumber;
             domain.BuildingType = dto.BuildingType;
             domain.CreatedAt = DateTime.Now;

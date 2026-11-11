@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using ShopTARpe25.ApplicationServices.Services;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
@@ -12,21 +11,19 @@ namespace ShopTARpe25
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<ShopTARpe25Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
 
-
+            //See on dependency injection, mis võimaldab meil kasutada teenuseid controllerites
+            builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
+            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
+            builder.Services.AddScoped<IFileServices, FileServices>();
 
             //selleks, et tuleb installida Microsoft.EntityFrameworkCore.SqlServer
             //ja Microsoft.EntityFrameworkCore.Tools NuGet paketid
-            //kui installitud, siis vaadata namespaces Microsoft.EntityFrameworkCore
-
-            builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
-            //see on dependecy injection, mis võimaldab meil kasutada teenusied contrlleritest
-            builder.Services.AddScoped<IFileServices, FileServices>();
-
-            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            //kui installitud, siis viidata namespacesis Microsoft.EntityFrameworkCore-le
+            builder.Services.AddDbContext<ShopTARpe25Context>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿@model ShopTARpe25.Models.RealEstate.RealEstateDetailsViewModel
+
 <h1>Details</h1>
 
 <div>
@@ -18,6 +19,12 @@
         </div>
     </dl>
 
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="Address" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.Address)
+        </div>
+    </dl>
 
     <dl class="row">
         <div class="form-group row">

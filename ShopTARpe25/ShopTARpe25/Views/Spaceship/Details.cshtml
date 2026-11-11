@@ -1,12 +1,9 @@
 ﻿@model ShopTARpe25.Models.Spaceship.SpaceshipDetailsViewModel
-@{
-    ViewData["Title"] = "Spacship Details";
-}
-<link rel="stylesheet" href="~/css/SpaceshipStylet.css" />
 
-<h2>Details</h2>
+<h1>Details</h1>
+
 <div>
-    <h4>Spaceship</h4>
+    <h4>Spaceships</h4>
     <hr />
 
     <dl class="row">
@@ -64,6 +61,7 @@
             @Html.DisplayFor(model => model.ModifiedAt)
         </div>
     </dl>
+
     @foreach(var images in Model.Images)
     {
         <partial name="_Images" model="images" />
@@ -73,4 +71,3 @@
     <a asp-action="Index" asp-controller="spaceship" class="btn btn-danger">Back to List</a>
 
 </div>
-

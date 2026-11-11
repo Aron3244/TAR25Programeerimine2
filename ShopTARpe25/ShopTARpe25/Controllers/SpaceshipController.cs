@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ShopTARpe25.Core.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using ShopTARpe25.Models.Spaceship;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using ShopTARpe25.Models.Spaceship;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ShopTARpe25.Controllers
@@ -21,15 +18,14 @@ namespace ShopTARpe25.Controllers
         //lisage Context
         public SpaceshipController
             (
-                IFileServices fileService,
                 ISpaceshipServices spaceshipService,
-                ShopTARpe25Context context
+                ShopTARpe25Context context,
+                IFileServices fileService
             )
         {
             _spaceshipService = spaceshipService;
             _context = context;
             _fileService = fileService;
-
         }
 
 
@@ -55,15 +51,15 @@ namespace ShopTARpe25.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            SpaceshipUpdateCretaeViewModel vm = new();
+            SpaceshipCreateUpdateViewModel vm = new();
 
-            return View("CreateUpdate",vm);
+            return View("CreateUpdate", vm);
         }
 
         //kui oled teinud vormi, siis see meetod käivitatakse
         //saadab andmed serverisse, kus need salvestatakse andmebaasi
         [HttpPost]
-        public async Task<IActionResult> Create(SpaceshipUpdateCretaeViewModel vm)
+        public async Task<IActionResult> Create(SpaceshipCreateUpdateViewModel vm)
         {
             //luua vaheinstants, mis sisaldab andmeid, mis on saadud vormist
             //need andmed tuleb edasi saata dto-sse, mis on mõeldud andmebaasi salvestamiseks
@@ -117,7 +113,7 @@ namespace ShopTARpe25.Controllers
                 .Where(x => x.SpaceshipId == id)
                 .Select(y => new ImageViewModel
                 {
-                    FilePath = y.ExistingFilePath,
+                    FilePath = /*"~/multipleFileUpload/" +*/ y.ExistingFilePath,
                     ImageId = y.Id,
                     SpaceshipId = y.SpaceshipId
                 }).ToArrayAsync();
@@ -150,15 +146,15 @@ namespace ShopTARpe25.Controllers
             }
 
             var images = await _context.FileToApis
-           .Where(x => x.SpaceshipId == id)
-           .Select(y => new ImageViewModel
-           {
-               FilePath =  y.ExistingFilePath,
-               ImageId = y.Id,
-               SpaceshipId = y.SpaceshipId
-           }).ToArrayAsync();
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new ImageViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                    SpaceshipId = y.SpaceshipId
+                }).ToArrayAsync();
 
-            var vm = new SpaceshipUpdateCretaeViewModel();
+            var vm = new SpaceshipCreateUpdateViewModel();
 
             vm.Id = spaceship.Id;
             vm.Name = spaceship.Name;
@@ -176,16 +172,14 @@ namespace ShopTARpe25.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(SpaceshipUpdateViewModel vm)
         {
-            var dto = new SpaceshipDto()
+            var dto = new SpaceshipDto
             {
                 Id = vm.Id,
                 Name = vm.Name,
                 Classification = vm.Classification,
+                BuiltDate = vm.BuiltDate,
                 Crew = vm.Crew,
                 EnginePower = vm.EnginePower,
-                BuiltDate = vm.BuiltDate,
-                CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt,
                 Files = vm.Files,
                 FileToApiDtos = vm.Images
                     .Select(file => new FileToApiDto
@@ -216,18 +210,17 @@ namespace ShopTARpe25.Controllers
                 return NotFound();
             }
 
+            var images = await _context.FileToApis
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new ImageViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                    SpaceshipId = y.SpaceshipId
+                }).ToArrayAsync();
             //kirjuta kood, mis aitab näidata pilte, mis 
             //kuuluvad konkreetsele kosmoselaevale
             //kui hakkan kustutama, siis saan teada, mida ma kustutan 
-
-            var images = await _context.FileToApis
-           .Where(x => x.SpaceshipId == id)
-           .Select(y => new ImageViewModel
-           {
-               FilePath = /*"~/multipleFileUpload/" + */y.ExistingFilePath,
-               ImageId = y.Id,
-               SpaceshipId = y.SpaceshipId
-           }).ToArrayAsync();
 
             var vm = new SpaceshipDeleteViewModel();
 
@@ -240,7 +233,6 @@ namespace ShopTARpe25.Controllers
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
             vm.Images.AddRange(images);
-
 
             return View(vm);
         }
@@ -261,14 +253,13 @@ namespace ShopTARpe25.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveImage(ImageViewModel vm)
         {
-            //tuleb ühendada dto ja viewModel, et saaks kasutrada teenuse ,meetodit.
+            //tuleb ühendada dto ja viewModel, et saaks kasutada teenuse meetodit
             var dto = new FileToApiDto()
             {
-                Id = vm.ImageId 
+                Id = vm.ImageId
             };
 
-
-            //kutsuda teenus meetodi, mis kasutab pildi andmebaasist
+            //kutsuda teenuse meetodit, mis kustutab pildi andmebaasist
             var image = await _fileService.RemoveImageFromApi(dto);
 
             if (image == null)
@@ -276,11 +267,7 @@ namespace ShopTARpe25.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Index));
-
-
+            return RedirectToAction(nameof(Index)); 
         }
-
-
     }
 }

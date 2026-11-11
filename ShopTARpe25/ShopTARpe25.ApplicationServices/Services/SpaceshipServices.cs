@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using static System.Net.WebRequestMethods;
 
 
 namespace ShopTARpe25.ApplicationServices.Services
@@ -79,7 +77,6 @@ namespace ShopTARpe25.ApplicationServices.Services
             spaceship.ModifiedAt = DateTime.Now;
             _fileServices.FilesToApi(dto, spaceship);
 
-
             _context.Spaceships.Update(spaceship);
             await _context.SaveChangesAsync();
 
@@ -100,6 +97,7 @@ namespace ShopTARpe25.ApplicationServices.Services
                     ExistingFilePath = y.ExistingFilePath,
                 }).ToArrayAsync();
 
+            //peame kutsuma meetodi esile, mis kustutab failid serverist
             await _fileServices.RemoveImagesFromApi(images);
             _context.Spaceships.Remove(result);
             await _context.SaveChangesAsync();

@@ -22,6 +22,10 @@ else
             <span asp-validation-for="Area" class="text-danger"></span>
         </div>
 
+        <div class="form-group">
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" class="form-control" />
+        </div>
 
         <div class="form-group">
             <label asp-for="RoomNumber" class="control-label"></label>
@@ -46,4 +50,3 @@ else
         <a asp-action="Index" asp-controller="realEstate" class="btn btn-success">Back</a>
     </form>
 </div>
-

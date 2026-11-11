@@ -4,7 +4,6 @@ using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using System.Text.RegularExpressions;
 
 
 namespace ShopTARpe25.ApplicationServices.Services
@@ -67,9 +66,26 @@ namespace ShopTARpe25.ApplicationServices.Services
             }
         }
 
-        public Task<FileToApi> RemoveImageFromApi(FileToApiDto dto)
+        public async Task<FileToApi> RemoveImageFromApi(FileToApiDto dto)
         {
-            throw new NotImplementedException();
+            //kui on vaja kustutada fail, siis tuleb see üles leida
+            var imageId = await _context.FileToApis
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            //kus asuvad failid, mida hakatakse kustutama
+            var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\" 
+                + imageId.ExistingFilePath;
+
+            //kui fail on olemas, siis kustuta see
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            _context.FileToApis.Remove(imageId);
+            await _context.SaveChangesAsync();
+
+            return imageId;
         }
 
         public async Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dto)
@@ -77,22 +93,20 @@ namespace ShopTARpe25.ApplicationServices.Services
             foreach (var image in dto)
             {
                 var imageId = await _context.FileToApis
-              .FirstOrDefaultAsync(x => x.Id == image.Id);
+                    .FirstOrDefaultAsync(x => x.Id == image.Id);
 
-                var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\" + imageId.ExistingFilePath;
+                var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\"
+                    + imageId.ExistingFilePath;
 
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
-
                 _context.FileToApis.Remove(imageId);
                 await _context.SaveChangesAsync();
-
             }
 
             return null;
         }
-
     }
 }

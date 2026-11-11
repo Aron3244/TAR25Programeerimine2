@@ -1,11 +1,7 @@
 ﻿@model ShopTARpe25.Models.Spaceship.SpaceshipDeleteViewModel
 
-@{
-    ViewData["Title"] = "Delete";
-}
-<link rel="stylesheet" href="~/css/SpaceshipStylet.css" />
+<h1>Delete</h1>
 
-<h2>Delete</h2>
 <div>
     <h4>Spaceship</h4>
     <hr />
@@ -65,21 +61,20 @@
             @Html.DisplayFor(model => model.ModifiedAt)
         </div>
     </dl>
-</div>
 
-@foreach (var images in Model.Images)
-{
-    <partial name="_Images" model="images" />
-    <br />
-}
+    @foreach (var images in Model.Images)
+    {
+        <partial name="_Images" model="images" />
+        <br />
+    }
 
-<div>
-    <form asp-action="DeleteConfirmation" asp-controller="Spaceship" method="post" style="display:inline;">
-        <input type="hidden" name="id" value="@Model.Id" />
-        <button type="submit" class="btn btn-danger">Delete</button>
+    <hr />
+    <form asp-action="DeleteConfirmation">
+        <input type="hidden" asp-for="Id"/>
+        <input type="submit" value="Delete" class="btn btn-danger"/>
+        <a asp-action="Index" asp-controller="spaceship"class="btn btn-success">Back</a>
     </form>
-    
-    <a asp-action="Index" asp-controller="Spaceship" class="btn btn-warning">Back to List</a>
+
 </div>
 
 
