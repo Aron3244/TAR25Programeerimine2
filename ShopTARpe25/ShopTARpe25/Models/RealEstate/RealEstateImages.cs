@@ -8,7 +8,7 @@ namespace ShopTARpe25.Models.RealEstate
         public string? FilePath { get; set; }
         public Guid? RealEstateId { get; set; }
         public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> fileToAptDtos { get; set; }
-        = new List<FileToApiDto>();
+        public List<ImageViewModel> Image { get; set; }
+        = new List<ImageViewModel>();
     }
 }

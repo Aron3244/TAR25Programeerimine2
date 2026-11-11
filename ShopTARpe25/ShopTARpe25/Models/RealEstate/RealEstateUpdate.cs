@@ -11,8 +11,8 @@ namespace ShopTARpe25.Models.RealEstate
         public string? BuildingType { get; set; }
         public DateTime? CreatedAt { get; set; }
         public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> fileToAptDtos { get; set; }
-        = new List<FileToApiDto>();
+        public List<ImageViewModel> Image { get; set; }
+       = new List<ImageViewModel>();
         public DateTime? ModifiedAt { get; set; }
     }
 }

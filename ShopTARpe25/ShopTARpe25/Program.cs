@@ -23,6 +23,8 @@ namespace ShopTARpe25
             builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
             //see on dependecy injection, mis võimaldab meil kasutada teenusied contrlleritest
             builder.Services.AddScoped<IFileServices, FileServices>();
+
+            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
