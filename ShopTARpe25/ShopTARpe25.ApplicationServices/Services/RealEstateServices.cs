@@ -3,6 +3,7 @@ using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace ShopTARpe25.ApplicationServices.Services
@@ -10,13 +11,17 @@ namespace ShopTARpe25.ApplicationServices.Services
     public class RealEstateServices : IRealEstateServices
     {
         private readonly ShopTARpe25Context _context;
+        private readonly IFileServices _fileServices;
 
         public RealEstateServices
             (
-                ShopTARpe25Context context
+                ShopTARpe25Context context,
+                IFileServices fileServices
             )
         {
+
             _context = context;
+            _fileServices = fileServices;
         }
 
 
@@ -32,7 +37,13 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.CreatedAt = DateTime.Now;
             domain.ModifiedAt = DateTime.Now;
 
-            await _context.Realestates.AddAsync(domain);
+            if (dto.Files != null)
+            {
+                _fileServices.FilesToDatabase(dto, domain);
+            }
+    
+
+            await _context.RealEstates.AddAsync(domain);
             await _context.SaveChangesAsync();
 
             return domain;
@@ -50,7 +61,7 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.Now;
 
-            _context.Realestates.Update(domain);
+            _context.RealEstates.Update(domain);
             await _context.SaveChangesAsync();
 
             return domain;
@@ -58,7 +69,7 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public async Task<RealEstate> DetailAsync(Guid id)
         {
-            var result = await _context.Realestates
+            var result = await _context.RealEstates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return result;
@@ -66,10 +77,10 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public async Task<RealEstate> Delete(Guid id)
         {
-            var result = await _context.Realestates
+            var result = await _context.RealEstates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            await _context.Realestates
+            await _context.RealEstates
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
 

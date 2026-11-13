@@ -136,5 +136,10 @@ namespace ShopTARpe25.ApplicationServices.Services
             }
 
         }
+
+        void IFileServices.FilesToDatabase(RealEstateDto dto, RealEstate domain)
+        {
+         
+        }
     }
 }

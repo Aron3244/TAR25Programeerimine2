@@ -85,7 +85,7 @@ namespace ShopTARpe25.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Realestates");
+                    b.ToTable("RealEstates");
                 });
 
             modelBuilder.Entity("ShopTARpe25.Core.Domain.Spaceship", b =>

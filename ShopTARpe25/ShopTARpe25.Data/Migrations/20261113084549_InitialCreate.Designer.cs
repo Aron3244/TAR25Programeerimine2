@@ -12,8 +12,8 @@ using ShopTARpe25.Data;
 namespace ShopTARpe25.Data.Migrations
 {
     [DbContext(typeof(ShopTARpe25Context))]
-    [Migration("20261112115439_FileToDatabase")]
-    partial class FileToDatabase
+    [Migration("20261113084549_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,7 +88,7 @@ namespace ShopTARpe25.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Realestates");
+                    b.ToTable("RealEstates");
                 });
 
             modelBuilder.Entity("ShopTARpe25.Core.Domain.Spaceship", b =>

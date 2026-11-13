@@ -6,6 +6,7 @@ namespace ShopTARpe25.Core.ServiceInterface
 {
     public interface IRealEstateServices
     {
+        
         Task<RealEstate> Create(RealEstateDto dto);
         Task<RealEstate> Update(RealEstateDto dto);
         Task<RealEstate> DetailAsync(Guid id);
