@@ -14,5 +14,6 @@ namespace ShopTARpe25.Core.Domain
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
+      
     }
 }

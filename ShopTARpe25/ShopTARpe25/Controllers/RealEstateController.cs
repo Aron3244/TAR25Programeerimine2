@@ -58,6 +58,14 @@ namespace ShopTARpe25.Controllers
                 Address = model.Address,
                 RoomNumber = model.RoomNumber,
                 BuildingType = model.BuildingType,
+                Files = model.Files,
+                Image = model.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.ImageId,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    RealEstateId = x.RealEstateId
+                }).ToArray()
             };
 
             var result = await _realEstateServices.Create(dto);
@@ -81,16 +89,20 @@ namespace ShopTARpe25.Controllers
                 return NotFound();
             }
 
-            var vm = new RealEstateCreateUpdateViewModel
-            {
-                Id = result.Id,
-                Area = result.Area,
-                Address = result.Address,
-                RoomNumber = result.RoomNumber,
-                BuildingType = result.BuildingType,
-                CreatedAt = result.CreatedAt,
-                ModifiedAt = result.ModifiedAt,
-            };
+            RealEstateImageViewModel[] images = await FileFromDatabase(id);
+
+
+            var vm = new RealEstateCreateUpdateViewModel();
+
+            vm.Id = result.Id;
+            vm.Area = result.Area;
+            vm.Address = result.Address;
+            vm.RoomNumber = result.RoomNumber;
+            vm.BuildingType = result.BuildingType;
+            vm.CreatedAt = result.CreatedAt;
+            vm.ModifiedAt = result.ModifiedAt;
+            vm.Image.AddRange(images);
+
 
             return View("CreateUpdate", vm);
         }
@@ -165,24 +177,26 @@ namespace ShopTARpe25.Controllers
         {
             var result = await _realEstateServices.DetailAsync(id);
 
+
             if (result == null)
             {
                 ModelState.AddModelError("", "Real estate detail failed.");
                 return View(nameof(Index));
             }
 
-            RealEstateDeleteViewModel[] images = await FileFromDatabase(id);
+            RealEstateImageViewModel[] images = await FileFromDatabase(id);
 
-            var vm = new RealEstateDetailsViewModel
-            {
-                Id = result.Id,
-                Area = result.Area,
-                Address = result.Address,
-                RoomNumber = result.RoomNumber,
-                BuildingType = result.BuildingType,
-                CreatedAt = result.CreatedAt,
-                ModifiedAt = result.ModifiedAt,
-            };
+            var vm = new RealEstateDetailsViewModel();
+
+            vm.Id = result.Id;
+            vm.Area = result.Area;
+            vm.Address = result.Address;
+            vm.RoomNumber = result.RoomNumber;
+            vm.BuildingType = result.BuildingType;
+            vm.CreatedAt = result.CreatedAt;
+            vm.ModifiedAt = result.ModifiedAt;
+            vm.Images.AddRange(images);
+
 
             return View(vm);
         }
