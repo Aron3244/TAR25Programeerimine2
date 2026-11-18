@@ -133,6 +133,21 @@ namespace ShopTARpe25.ApplicationServices.Services
             }
 
         }
+        public async Task<FilesToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto)
+        {
+        
+            var image = await _context.FilesToDatabases
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
+            if (image == null)
+            {
+                return null;
+            }
+
+            _context.FilesToDatabases.Remove(image);
+            await _context.SaveChangesAsync();
+
+            return image;
+        }
     }
 }

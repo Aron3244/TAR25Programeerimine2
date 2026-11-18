@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ShopTARpe25.ApplicationServices.Services;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 using ShopTARpe25.Models.RealEstate;
-using Microsoft.EntityFrameworkCore;
 
 namespace ShopTARpe25.Controllers
 {
@@ -11,15 +12,18 @@ namespace ShopTARpe25.Controllers
     {
         private readonly ShopTARpe25Context _context;
         private readonly IRealEstateServices _realEstateServices;
+        private readonly IFileServices _fileService;
 
         public RealEstateController
             (
                 ShopTARpe25Context context,
-                IRealEstateServices realEstateServices
+                IRealEstateServices realEstateServices,
+                 IFileServices fileService
             )
         {
             _context = context;
             _realEstateServices = realEstateServices;
+            _fileService = fileService;
         }
 
         public IActionResult Index()
@@ -217,5 +221,26 @@ namespace ShopTARpe25.Controllers
 
             return result;
         }
+        [HttpPost]
+        public async Task<IActionResult> RemoveImages(RealEstateImageViewModel vm)
+        {
+           
+            var dto = new FileToDatabaseDto()
+            {
+                Id = vm.ImageId
+            };
+
+            var image = await _fileService.RemoveImageFromDatabase(dto);
+
+            var realEstateId = image.RealEstateId;
+
+            if(image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
