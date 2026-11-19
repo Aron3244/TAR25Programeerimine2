@@ -35,7 +35,7 @@ namespace ShopTARpe25.Controllers
                     Area = x.Area,
                     BuildingType = x.BuildingType,
                     RoomNumber = x.RoomNumber,
-                });
+                }).ToList();
 
             return View(result);
         }

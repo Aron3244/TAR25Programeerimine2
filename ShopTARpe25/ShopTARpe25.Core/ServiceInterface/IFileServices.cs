@@ -10,5 +10,6 @@ namespace ShopTARpe25.Core.ServiceInterface
         Task<FileToApi> RemoveImageFromApi(FileToApiDto dto);
         Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dto);
         Task <FilesToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto);
+        Task<FilesToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos);
     }
 }
