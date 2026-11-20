@@ -24,7 +24,7 @@ namespace ShopTARpe25.RealEstateTest
         // Konstruktor – käivitub automaatselt iga kord, kui uus test algab
         protected TestBase()
         {
-            // Loob uue tühja nimekirja teenuste registreerimiseks
+            // Loob uue tühja nimekirja teenuste testimiskes
             var services = new ServiceCollection();
 
             // Kutsub välja allpool oleva meetodi, mis täidab selle nimekirja teenuste ja andmebaasiga
