@@ -3,7 +3,6 @@ using ShopTARpe25.Core.Domain;
 using ShopTARpe25.Core.Dto;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
-using System.Diagnostics.CodeAnalysis;
 
 
 namespace ShopTARpe25.ApplicationServices.Services
@@ -19,7 +18,6 @@ namespace ShopTARpe25.ApplicationServices.Services
                 IFileServices fileServices
             )
         {
-
             _context = context;
             _fileServices = fileServices;
         }
@@ -37,13 +35,13 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.CreatedAt = DateTime.Now;
             domain.ModifiedAt = DateTime.Now;
 
+            //kui ankeedis on pildid, siis kutsu faili salvestamine v'lja
             if (dto.Files != null)
             {
                 _fileServices.UploadFilesToDatabase(dto, domain);
             }
-    
 
-            await _context.RealEstates.AddAsync(domain);
+            await _context.Realestates.AddAsync(domain);
             await _context.SaveChangesAsync();
 
             return domain;
@@ -61,13 +59,12 @@ namespace ShopTARpe25.ApplicationServices.Services
             domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.Now;
 
-
-            if (dto.Files != null)
+            if(dto.Files != null)
             {
                 _fileServices.UploadFilesToDatabase(dto, domain);
             }
 
-            _context.RealEstates.Update(domain);
+            _context.Realestates.Update(domain);
             await _context.SaveChangesAsync();
 
             return domain;
@@ -75,7 +72,7 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public async Task<RealEstate> DetailAsync(Guid id)
         {
-            var result = await _context.RealEstates
+            var result = await _context.Realestates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return result;
@@ -83,20 +80,23 @@ namespace ShopTARpe25.ApplicationServices.Services
 
         public async Task<RealEstate> Delete(Guid id)
         {
-            var result = await _context.RealEstates
+            var result = await _context.Realestates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            var images = await _context.FilesToDatabases
-           .Where(x => x.RealEstateId == id)
-            .Select(y => new FileToDatabaseDto
-            {
-                 Id = y.Id,
-                 ImageTitle = y.ImageTitle,
-                 RealEstateId = y.RealEstateId,
-            }).ToArrayAsync();
+            var images = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new FileToDatabaseDto
+                {
+                    Id = y.Id,
+                    ImageTitle = y.ImageTitle,
+                    RealEstateId = y.RealEstateId,
+                }).ToArrayAsync();
 
+            //nüüd on vaja teada saada, et miks ankeet kustutatakse ära,
+            //aga pilte ei kustutata 
+            //vaadake Spaceship teenusklassi
             await _fileServices.RemoveImagesFromDatabase(images);
-            await _context.RealEstates
+            await _context.Realestates
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
 

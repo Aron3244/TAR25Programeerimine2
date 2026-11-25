@@ -1,4 +1,6 @@
-﻿namespace ShopTARpe25.Models.RealEstate
+﻿using ShopTARpe25.Models.Spaceship;
+
+namespace ShopTARpe25.Models.RealEstate
 {
     public class RealEstateDeleteViewModel
     {
@@ -7,7 +9,9 @@
         public string? Address { get; set; }
         public int RoomNumber { get; set; }
         public string? BuildingType { get; set; }
-        public List<RealEstateImageViewModel> Images { get; set; } = new List<RealEstateImageViewModel>();
+
+        public List<RealEstateImageViewModel> Images { get; set; } = [];
+
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
     }

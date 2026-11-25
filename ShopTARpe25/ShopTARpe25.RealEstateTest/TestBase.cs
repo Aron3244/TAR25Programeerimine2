@@ -1,88 +1,84 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ShopTARpe25.ApplicationServices.Services;
 using ShopTARpe25.Core.ServiceInterface;
 using ShopTARpe25.Data;
 using ShopTARpe25.RealEstateTest.Macros;
+using ShopTARpe25.RealEstateTest.Mock;
 
 
-
-
-
-//Näitab kus asub
 namespace ShopTARpe25.RealEstateTest
 {
-    // Abstraktne põhiklass testidele
+    //iga koodirida ära kommenteerida, et mis mida meetod teeb ja miks seda on vaja?
     public abstract class TestBase
-
-    {      
-      // Muutuja, mis hoiab endas kõiki registreeritud teenuseid ja andmebaasi
+    {
         protected IServiceProvider ServiceProvider { get; set; }
 
-
-        // Konstruktor – käivitub automaatselt iga kord, kui uus test algab
         protected TestBase()
         {
-            // Loob uue tühja nimekirja teenuste testimiskes
+            //loob uue teenuse kogu vajalikuks teenuste testimiseks
             var services = new ServiceCollection();
-
-            // Kutsub välja allpool oleva meetodi, mis täidab selle nimekirja teenuste ja andmebaasiga
+            //kutsub välja meetodi, mis lisab teenused ja vajalikud sõltuvused
             SetupServices(services);
-
-            // Ehitab nimekirja põhjal valmis teenusepakkuja, kust testid saavad hiljem vajalikke osi küsida
+            //selle kaudu saab teenuseid küsida
             ServiceProvider = services.BuildServiceProvider();
         }
 
-        // Meetod, kus pannakse kirja, milliseid teenuseid ja andmebaasi testides kasutatakse
         public virtual void SetupServices(IServiceCollection services)
         {
-            // Ütleb programmile: kui keegi küsib IRealEstateServices liidest, anna talle RealEstateServices klass
             services.AddScoped<IRealEstateServices, RealEstateServices>();
+            //miks pidi lisama kaks servict juurde, kuigi me tahame testida ainult Realestate CRUDi?
+            //sellepärast, et see oli seotud failide lisamisega ja failide lisamine omakorda oli seoses
+            //IHostEnvironmentiga
+            services.AddScoped<IFileServices, FileServices>();
+            services.AddScoped<IHostEnvironment, MockIHostEnvironment>();
 
-            // Seadistab andmebaasi konteksti (ShopTARpe25Context) testide jaoks
+            //registreerib andmebaasi konteksti
             services.AddDbContext<ShopTARpe25Context>(x =>
             {
-                // Käseb päris andmebaasi asemel kasutada ajutist mälupõhist (InMemory) andmebaasi nimega "Test"
-                x.UseInMemoryDatabase("Test");
+                //seadistab kasutama mälusisest andmebaasi nimega TEST, et testimisel kasutada 
+                //ilma päris andmebaasita
+                x.UseInMemoryDatabase("TEST");
 
-                // Eirab hoiatusi, mis tekivad siis, kui kood üritab mälubaasis tehinguid (Transactions) kasutada
+                //eirab hoiatust, et mälusisene DB ei toeta tehinguid samamoodi nagu päris andmebaas
                 x.ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
-            // Registreerib automaatselt kõik testides kasutatavad abiklassid (makrod)
+            //kutsub välja macrode klassi
             RegisterMacros(services);
         }
 
-        // Tühi meetod ressursside vabastamiseks pärast testi lõppu (vajadusel saab siia puhastuskoodi lisada)
+        //vabastab ressursid peale kasutamist
         public void Dispose()
         {
 
         }
 
-        // Abimeetod, millega saab testides lühidalt küsida ükskõik millist registreeritud teenust (nt Svc<IRealEstateServices>())
+        //abimeetod, millega klass ja selle alamklassid saavad teenuse tüübi järgi küsida
         protected T Svc<T>()
         {
-            // Otsib teenusepakkujast küsitud tüüpi teenuse ja tagastab selle
+            //otsib teenusepakkuja tüüpi
             return ServiceProvider.GetService<T>();
         }
 
-        // Privaatne abimeetod, mis leiab automaatselt üles kõik makrod ja lisab need teenuste hulka
+        //abimeetod makrode leidmsieks ja registreerimiseks
         private void RegisterMacros(IServiceCollection services)
-        {        
-            // Võtab aluseks IMacros liidese tüübi, et teada, milliseid klasse otsida
+        {
+            //saaks reflektsiooniga otsingus kasutada
             var macroBaseType = typeof(IMacros);
 
-            // Otsib projektist üles kõik klassid, mis kasutavad IMacros liidest (ja pole ise liidesed ega abstraktsed)
+            //loeb kokku kõik tüübid sellest assemblyst, kus Macro on määratletud
             var macros = macroBaseType.Assembly.GetTypes()
+                //valib tööbid, mis rakendavad IMacros liidest, aga ei ole ise liidesed
+                //ega abstraktsed klassid
                 .Where(t => macroBaseType.IsAssignableFrom(t)
-               && !t.IsInterface && !t.IsAbstract);
+                && !t.IsInterface && !t.IsAbstract);
 
-            // Käib kõik leitud makro-klassid ükshaaval läbi
+            //käib leitud makrode classid ükshaaval läbi
             foreach (var macro in macros)
             {
-                // Lisab makro teenuste hulka nii, et see luuakse valmis ainult ühe korra. 
-                // Iga kord, kui test seda makrot küsib, antakse talle sama juba olemasolev objekt, mitte ei tehta uut.
-
+                //kasutab ühte makro eksemplaari
                 services.AddSingleton(macro);
             }
         }

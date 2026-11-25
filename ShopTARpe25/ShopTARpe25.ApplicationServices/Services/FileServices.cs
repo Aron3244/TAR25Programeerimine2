@@ -108,55 +108,56 @@ namespace ShopTARpe25.ApplicationServices.Services
 
             return null;
         }
+
         public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
         {
             //toimub kontroll, kas vähemalt üks fail või mitu
             if (dto.Files != null && dto.Files.Count > 0)
             {
-                //tuleb kasutada foreach et mitu faili üles laadiada
+                //tuleb kasutada foreachi, et mitu faili ülesse laadida
                 foreach(var file in dto.Files)
                 {
+                    //foreachi sees tuleb kasutada using-t
                     using (var target = new MemoryStream())
                     {
-                        FilesToDatabase files = new FilesToDatabase()
+                        //FileToDatabase
+                        FileToDatabase files = new FileToDatabase()
                         {
                             Id = Guid.NewGuid(),
                             ImageTitle = file.FileName,
-                            RealEstateId = domain.Id
+                            RealEstateId = domain.Id,
                         };
+
                         file.CopyTo(target);
                         files.ImageData = target.ToArray();
 
-                        _context.FilesToDatabases.Add(files);
+                        _context.FileToDatabases.Add(files);
                     }
                 }
             }
-
         }
-        public async Task<FilesToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto)
+
+        public async Task<FileToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto)
         {
-        
-            var image = await _context.FilesToDatabases
+            var image = await _context.FileToDatabases
                 .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-
-
-            _context.FilesToDatabases.Remove(image);
+            _context.FileToDatabases.Remove(image);
             await _context.SaveChangesAsync();
 
             return image;
         }
-        public async Task<FilesToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos)
+
+        //kui kustutad mitu pilti, siis peab olema massiivis e []
+        public async Task<FileToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos)
         {
             foreach (var dto in dtos)
             {
-                var image = await _context.FilesToDatabases
+                var image = await _context.FileToDatabases
                     .Where(x => x.Id == dto.Id)
-              .FirstOrDefaultAsync(x => x.Id == dto.Id);
+                    .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-
-
-                _context.FilesToDatabases.Remove(image);
+                _context.FileToDatabases.Remove(image);
                 await _context.SaveChangesAsync();
             }
 

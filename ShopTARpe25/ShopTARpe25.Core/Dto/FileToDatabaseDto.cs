@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShopTARpe25.Core.Dto
+﻿namespace ShopTARpe25.Core.Dto
 {
     public class FileToDatabaseDto
     {

@@ -39,7 +39,7 @@ namespace ShopTARpe25.Data.Migrations
                     b.ToTable("FileToApis");
                 });
 
-            modelBuilder.Entity("ShopTARpe25.Core.Domain.FilesToDatabase", b =>
+            modelBuilder.Entity("ShopTARpe25.Core.Domain.FileToDatabase", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace ShopTARpe25.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FilesToDatabases");
+                    b.ToTable("FileToDatabases");
                 });
 
             modelBuilder.Entity("ShopTARpe25.Core.Domain.RealEstate", b =>
@@ -85,7 +85,7 @@ namespace ShopTARpe25.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RealEstates");
+                    b.ToTable("Realestates");
                 });
 
             modelBuilder.Entity("ShopTARpe25.Core.Domain.Spaceship", b =>
