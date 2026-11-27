@@ -155,17 +155,18 @@ namespace ShopTARpe25.RealEstateTest
         [Fact]
         public async Task Should_UpdateRealEstate_WhenUpdateDataVersion3()
         {
-            RealEstateDto dto = MockRealEstateData3();
+            RealEstateDto dto = MockRealEstateData();
 
-            RealEstateDto update = MockRealEstateDataUpdate();
+            RealEstateDto NullDto = MockRealEstateData3();
 
 
             var CreateRealeEstate = await Svc<IRealEstateServices>().Create(dto);
-            var result = await Svc<IRealEstateServices>().Update(update);
+            var result = await Svc<IRealEstateServices>().Update(NullDto);
 
-            Assert.NotEqual(CreateRealeEstate, result);
-
+            Assert.NotEqual(CreateRealeEstate.Id, result.Id);
+            Assert.NotEqual(CreateRealeEstate.Address, result.Address);
         }
+
 
 
         private RealEstateDto MockRealEstateData()
@@ -223,6 +224,7 @@ namespace ShopTARpe25.RealEstateTest
 
             };
         }
+
 
     }
 }
