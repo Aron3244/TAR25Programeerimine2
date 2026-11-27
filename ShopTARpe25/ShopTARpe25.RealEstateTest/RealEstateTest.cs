@@ -79,7 +79,7 @@ namespace ShopTARpe25.RealEstateTest
 
             //võrdlen id-sid, kas kustutsin sllle ära, mis olid andmebaasis
 
-            Assert.NotEqual(addRealEstate.Id, deleteRealEstate.Id);
+            Assert.Equal(addRealEstate.Id, deleteRealEstate.Id);
         }
 
         //mul on kask ankeeti loodud ja ühe kustutan ära 
@@ -102,7 +102,7 @@ namespace ShopTARpe25.RealEstateTest
 
 
         //uupendab andmeid
-
+        [Fact]
         public async Task Should_UpdateByIdRealEstate_WhenUpdateData()
         {
             Guid guid = new Guid("d3661e93-4701-40a7-9770-ef18cd3a3253");
@@ -129,11 +129,44 @@ namespace ShopTARpe25.RealEstateTest
 
 
         }
-
+        [Fact]
         public async Task Should_UpdateRealEstate_WhenUpdateDataVersion2()
         {
+            //tuleb kasutada MockRealEstateDataUpdate ja MockRealEstateData2
+
+
+            RealEstateDto dto = MockRealEstateDataUpdate();
+            RealEstateDto dto2 = MockRealEstateData2();
+
+
+           var CreateRealeEstate = await Svc<IRealEstateServices>().Create(dto);
+            var result = await Svc<IRealEstateServices>().Update(dto2);
+
+
+
+
+            Assert.DoesNotMatch(CreateRealeEstate.Address, result.Address);
+            Assert.NotEqual(CreateRealeEstate.ModifiedAt, result.ModifiedAt);
+        }
+
+        // kasutame ankeeti, kus kõik andmed on NULL
+        //Tuleb kasutada create ja update 
+
+        [Fact]
+        public async Task Should_UpdateRealEstate_WhenUpdateDataVersion3()
+        {
+            RealEstateDto dto = MockRealEstateData3();
+
+            RealEstateDto update = MockRealEstateDataUpdate();
+
+
+            var CreateRealeEstate = await Svc<IRealEstateServices>().Create(dto);
+            var result = await Svc<IRealEstateServices>().Update(update);
+
+            Assert.NotEqual(CreateRealeEstate, result);
 
         }
+
 
         private RealEstateDto MockRealEstateData()
         {
@@ -148,5 +181,48 @@ namespace ShopTARpe25.RealEstateTest
 
             };
         }
+
+        private RealEstateDto MockRealEstateData2()
+        {
+            return new RealEstateDto
+            {
+                Area =120.00,
+                Address = "SampleAadress",
+                RoomNumber = 8,
+                BuildingType = "House",
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now
+
+            };
+        }
+
+        private RealEstateDto MockRealEstateData3()
+        {
+            return new RealEstateDto
+            {
+                Area = null,
+                Address = null,
+                RoomNumber = 0,
+                BuildingType = null,
+                CreatedAt =null,
+                ModifiedAt = null
+
+            };
+        }
+
+        private RealEstateDto MockRealEstateDataUpdate()
+        {
+            return new RealEstateDto
+            {
+                Area = 100.00,
+                Address = "WoodLand",
+                RoomNumber = 2,
+                BuildingType = "Mansion",
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now
+
+            };
+        }
+
     }
 }
